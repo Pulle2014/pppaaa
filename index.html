@@ -1,12 +1,106 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>FIXED</title>
-<style>body{margin:0;background:#111;color:#fff;font-family:Arial}#hud{background:#222;padding:10px;border-bottom:2px solid cyan}canvas{background:#111;width:100%;height:90vh;display:block}#ok{background:green;padding:10px;text-align:center}</style>
-</head><body>
-<div id="hud"><button>SHOP</button><button>SKINS</button><button>ULTIMATES</button></div>
-<div id="ok">REPARATUR ERFOLGREICH - Jetzt ohne Emoji!</div>
-<canvas id="g"></canvas>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ULTIMATE FAMILY BATTLE</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d0d0d;color:#fff;font-family:Arial,sans-serif;overflow:hidden}
+#hud{position:fixed;top:0;left:0;right:0;height:62px;background:#1c1c1c;border-bottom:3px solid #00e5ff;display:flex;align-items:center;gap:6px;padding:0 10px;z-index:100}
+#hud button{background:#2a2a2a;color:#fff;border:2px solid #00e5ff;padding:7px 10px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:12px}
+#hud button:hover{background:#00e5ff;color:#000}
+#stats{margin-left:auto;display:flex;gap:12px;font-size:13px;font-weight:bold}
+#stats span{color:#00e5ff}
+#gameCanvas{display:block;margin-top:62px;width:100vw;height:calc(100vh - 62px);background:#111}
+.panel{position:fixed;top:70px;left:50%;transform:translateX(-50%);width:92%;max-width:700px;max-height:80vh;background:#1e1e1e;border:3px solid #00e5ff;border-radius:12px;padding:18px;overflow:auto;display:none;z-index:200}
+.panel h2{color:#00e5ff;margin-bottom:12px}
+.item{background:#2a2a2a;border:1px solid #444;padding:10px;border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.item button{background:#00e5ff;color:#000;border:none;padding:6px 10px;border-radius:6px;font-weight:bold;cursor:pointer}
+#msg{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#00e5ff;color:#000;padding:10px 18px;border-radius:20px;font-weight:bold;display:none;z-index:300}
+</style>
+</head>
+<body>
+<div id="hud">
+<button onclick="openPanel('shop')">SHOP</button>
+<button onclick="openPanel('skins')">SKINS [20]</button>
+<button onclick="openPanel('ult')">ULTIMATES</button>
+<button onclick="switchChar()">SWITCH [Q]</button>
+<button onclick="openPanel('family')">FAMILY</button>
+<div id="stats">
+<div>MONEY: <span id="money">500</span></div>
+<div>LVL: <span id="lvl">1</span></div>
+<div>CHAR: <span id="charName">CYAN</span></div>
+</div>
+</div>
+<canvas id="gameCanvas"></canvas>
+<div id="shop" class="panel">
+<h2>SHOP</h2>
+<div class="item"><span>SPEED +1 (200)</span><button onclick="buy('speed')">BUY</button></div>
+<div class="item"><span>DAMAGE +10 (300)</span><button onclick="buy('dmg')">BUY</button></div>
+<div class="item"><span>HEALTH +20 (250)</span><button onclick="buy('hp')">BUY</button></div>
+<div class="item"><span>COIN BOOST x2 (1000)</span><button onclick="buy('coin')">BUY</button></div>
+<button onclick="closePanels()">CLOSE [ESC]</button>
+</div>
+<div id="skins" class="panel">
+<h2>SKINS - Farbe aendern</h2>
+<div class="item"><span style="color:cyan">CYAN - FREE</span><button onclick="setSkin('cyan')">USE</button></div>
+<div class="item"><span style="color:#ff0055">RED - 100</span><button onclick="buySkin('red',100)">BUY</button></div>
+<div class="item"><span style="color:#00ff88">GREEN - 100</span><button onclick="buySkin('green',100)">BUY</button></div>
+<div class="item"><span style="color:#ffcc00">GOLD - 500</span><button onclick="buySkin('gold',500)">BUY</button></div>
+<button onclick="closePanels()">CLOSE</button>
+</div>
+<div id="ult" class="panel">
+<h2>ULTIMATES - [R] Taste</h2>
+<div class="item"><span>BLAST - 500 DMG (Cost 300)</span><button onclick="buyUlt('blast')">BUY</button></div>
+<div class="item"><span>HEAL - +100 HP (Cost 300)</span><button onclick="buyUlt('heal')">BUY</button></div>
+<div class="item"><span>TIME STOP - 3s (Cost 800)</span><button onclick="buyUlt('stop')">BUY</button></div>
+<button onclick="closePanels()">CLOSE</button>
+</div>
+<div id="family" class="panel">
+<h2>FAMILY TEAM</h2>
+<div class="item"><span>DAD - Tank [HP 200]</span><button onclick="setChar(0)">SELECT</button></div>
+<div class="item"><span>MOM - Healer [HEAL]</span><button onclick="setChar(1)">SELECT</button></div>
+<div class="item"><span>KID 1 - Speed [FAST]</span><button onclick="setChar(2)">SELECT</button></div>
+<div class="item"><span>KID 2 - Damage [STRONG]</span><button onclick="setChar(3)">SELECT</button></div>
+<button onclick="closePanels()">CLOSE</button>
+</div>
+<div id="msg"></div>
 <script>
-const c=document.getElementById('g'),x=c.getContext('2d');c.width=innerWidth;c.height=600;let px=100,py=100;
-function d(){x.fillStyle='#111';x.fillRect(0,0,c.width,c.height);x.fillStyle='cyan';x.fillRect(px,py,40,40);requestAnimationFrame(d);}
-addEventListener('keydown',e=>{if(e.key=='w')py-=10;if(e.key=='s')py+=10;if(e.key=='a')px-=10;if(e.key=='d')px+=10;});d();
-</script></body></html>
+const canvas=document.getElementById('gameCanvas');const ctx=canvas.getContext('2d');
+let W,H;function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight-62;}resize();window.onresize=resize;
+let money=500,lvl=1,xp=0,speed=4,dmg=20,hp=100,maxHp=100,coinMult=1,color='cyan',charId=0;
+let x=W/2,y=H/2,keys={},enemies=[],particles=[],lastUlt=0;
+const chars=[{name:'DAD',color:'cyan',hp:200},{name:'MOM',color:'#ff88cc',hp:120},{name:'KID1',color:'#00ff88',hp:80},{name:'KID2',color:'#ffcc00',hp:100}];
+const skinsOwned=['cyan'];const ultsOwned=[];
+function showMsg(t){const m=document.getElementById('msg');m.textContent=t;m.style.display='block';setTimeout(()=>m.style.display='none',2000);}
+function updateHUD(){document.getElementById('money').textContent=money;document.getElementById('lvl').textContent=lvl;document.getElementById('charName').textContent=chars[charId].name;}
+function openPanel(id){closePanels();document.getElementById(id).style.display='block';}
+function closePanels(){document.querySelectorAll('.panel').forEach(p=>p.style.display='none');}
+function buy(type){if(type==='speed'&&money>=200){money-=200;speed++;showMsg('SPEED UP!');}else if(type==='dmg'&&money>=300){money-=300;dmg+=10;showMsg('DAMAGE UP!');}else if(type==='hp'&&money>=250){money-=250;maxHp+=20;hp=maxHp;showMsg('HEALTH UP!');}else if(type==='coin'&&money>=1000){money-=1000;coinMult=2;showMsg('COIN x2 ACTIVE!');}else{showMsg('NOT ENOUGH MONEY');}updateHUD();}
+function setSkin(c){if(skinsOwned.includes(c)){color=c;chars[charId].color=c;showMsg('SKIN: '+c);closePanels();}else{showMsg('NOT OWNED');}}
+function buySkin(c,price){if(money>=price){money-=price;skinsOwned.push(c);showMsg('SKIN BOUGHT: '+c);}else{showMsg('NOT ENOUGH');}updateHUD();}
+function buyUlt(u){if(money>=300&&!ultsOwned.includes(u)){money-=300;ultsOwned.push(u);showMsg('ULT BOUGHT: '+u);}else{showMsg('ALREADY OWNED OR NO MONEY');}updateHUD();}
+function setChar(i){charId=i;color=chars[i].color;maxHp=chars[i].hp;hp=maxHp;updateHUD();showMsg('CHAR: '+chars[i].name);closePanels();}
+function switchChar(){charId=(charId+1)%4;setChar(charId);}
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key.toLowerCase()==='q')switchChar();if(e.key.toLowerCase()==='r')useUlt();if(e.key==='Escape')closePanels();});
+window.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;});
+function useUlt(){if(Date.now()-lastUlt<5000){showMsg('ULT COOLDOWN');return;}if(!ultsOwned.length){showMsg('NO ULT - BUY IN SHOP');return;}lastUlt=Date.now();const u=ultsOwned[0];if(u==='blast'){enemies=[];for(let i=0;i<15;i++)particles.push({x:x,y:y,vx:(Math.random()-0.5)*10,vy:(Math.random()-0.5)*10,life:30});money+=100;showMsg('ULT: BLAST!');}if(u==='heal'){hp=Math.min(maxHp,hp+100);showMsg('ULT: HEAL!');}if(u==='stop'){showMsg('ULT: TIME STOP 3s - ENEMIES FROZEN');setTimeout(()=>showMsg('TIME RESUME'),3000);}}
+function spawnEnemy(){if(enemies.length<8){enemies.push({x:Math.random()*W,y:Math.random()*H,hp:50});}}
+setInterval(spawnEnemy,2000);
+function loop(){
+ctx.fillStyle='#111';ctx.fillRect(0,0,W,H);
+let nx=0,ny=0;if(keys['w'])ny=-speed;if(keys['s'])ny=speed;if(keys['a'])nx=-speed;if(keys['d'])nx=speed;x+=nx;y+=ny;x=Math.max(20,Math.min(W-20,x));y=Math.max(20,Math.min(H-20,y));
+ctx.fillStyle=color;ctx.fillRect(x-15,y-15,30,30);
+ctx.fillStyle='#fff';ctx.fillRect(x-15,y-20,(hp/maxHp)*30,4);
+enemies.forEach((e,i)=>{e.x+=(x-e.x)*0.01;e.y+=(y-e.y)*0.01;ctx.fillStyle='#ff3333';ctx.fillRect(e.x-10,e.y-10,20,20);if(Math.hypot(x-e.x,y-e.y)<25){hp-=0.5;if(hp<=0){hp=maxHp;money=Math.max(0,money-50);showMsg('DEAD - RESPAWN');x=W/2;y=H/2;}}if(Math.hypot(x-e.x,y-e.y)<35&&keys[' ']){e.hp-=dmg*0.1;if(e.hp<=0){enemies.splice(i,1);money+=10*coinMult;xp+=10;if(xp>=100){lvl++;xp=0;showMsg('LEVEL UP! LVL '+lvl);}updateHUD();}}});
+particles.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;p.life--;ctx.fillStyle='#00e5ff';ctx.fillRect(p.x,p.y,4,4);if(p.life<=0)particles.splice(i,1);});
+ctx.fillStyle='#888';ctx.font='12px Arial';ctx.fillText('WASD=MOVE | SPACE=ATTACK | Q=SWITCH CHAR | R=ULT | SHOP BUTTONS',10,20);
+updateHUD();
+requestAnimationFrame(loop);
+}
+loop();
+showMsg('GAME LOADED - 0 EMOJIS - SAFE!');
+</script>
+</body>
+</html>
