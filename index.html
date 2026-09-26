@@ -1,40 +1,12 @@
 <!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ULTIMATE FAMILY</title>
-<style>
-body{margin:0;background:#0f0f0f;color:white;font-family:Arial;overflow:hidden}
-#hud{position:absolute;top:0;left:0;right:0;background:#222;padding:10px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:2px solid cyan;z-index:10}
-button{background:#333;color:white;border:1px solid cyan;padding:8px 12px;cursor:pointer;border-radius:6px;font-weight:bold}
-button:hover{background:cyan;color:black}
-canvas{display:block;margin-top:60px;background:#111;width:100vw;height:calc(100vh - 60px)}
-#ok{position:absolute;top:70px;left:50%;transform:translateX(-50%);background:#00aa00;color:white;padding:12px 24px;border-radius:10px;font-weight:bold;z-index:20}
-</style>
-</head>
-<body>
-<div id="hud">
-<button>SHOP</button><button>2D SKINS</button><button>ULTIMATES</button><button>SWITCH</button><button>NORMAL</button><button>FAMILY</button>
-</div>
-<div id="ok">✅ REPARATUR ERFOLGREICH - Seite laedt!</div>
-<canvas id="game"></canvas>
+<html><head><meta charset="UTF-8"><title>FIXED</title>
+<style>body{margin:0;background:#111;color:#fff;font-family:Arial}#hud{background:#222;padding:10px;border-bottom:2px solid cyan}canvas{background:#111;width:100%;height:90vh;display:block}#ok{background:green;padding:10px;text-align:center}</style>
+</head><body>
+<div id="hud"><button>SHOP</button><button>SKINS</button><button>ULTIMATES</button></div>
+<div id="ok">REPARATUR ERFOLGREICH - Jetzt ohne Emoji!</div>
+<canvas id="g"></canvas>
 <script>
-const c=document.getElementById('game'); const ctx=c.getContext('2d');
-c.width=window.innerWidth; c.height=window.innerHeight-60;
-let x=200,y=200;
-function draw(){
- ctx.fillStyle='#111'; ctx.fillRect(0,0,c.width,c.height);
- ctx.fillStyle='cyan'; ctx.fillRect(x,y,50,50);
- ctx.fillStyle='white'; ctx.font='22px Arial';
- ctx.fillText('BEWEGEN mit WASD - Dein Fix hat funktioniert!',20,40);
- requestAnimationFrame(draw);
-}
-window.addEventListener('keydown',e=>{
- if(e.key==='w') y-=15; if(e.key==='s') y+=15;
- if(e.key==='a') x-=15; if(e.key==='d') x+=15;
-});
-draw();
-</script>
-</body>
-</html>
+const c=document.getElementById('g'),x=c.getContext('2d');c.width=innerWidth;c.height=600;let px=100,py=100;
+function d(){x.fillStyle='#111';x.fillRect(0,0,c.width,c.height);x.fillStyle='cyan';x.fillRect(px,py,40,40);requestAnimationFrame(d);}
+addEventListener('keydown',e=>{if(e.key=='w')py-=10;if(e.key=='s')py+=10;if(e.key=='a')px-=10;if(e.key=='d')px+=10;});d();
+</script></body></html>
