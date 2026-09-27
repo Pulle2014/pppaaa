@@ -3,247 +3,210 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>V14 FIXED MOVEMENT</title>
+<title>V15 MINECRAFT SHOOTER</title>
 <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js"}}</script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}body{background:#000;color:#fff;font-family:Arial;overflow:hidden;touch-action:none}
-#hud{position:fixed;top:0;left:0;right:0;height:60px;background:#111;border-bottom:3px solid #00e5ff;display:flex;align-items:center;gap:5px;padding:0 8px;z-index:100}
+*{margin:0;padding:0;box-sizing:border-box}body{background:#000;color:#fff;font-family:Arial;overflow:hidden;touch-action:none;cursor:none}
+#hud{position:fixed;top:0;left:0;right:0;height:58px;background:#111;border-bottom:3px solid #00e5ff;display:flex;align-items:center;gap:5px;padding:0 8px;z-index:100;cursor:auto}
 #hud button{background:#222;color:#fff;border:2px solid #00e5ff;padding:6px 10px;border-radius:20px;cursor:pointer;font-weight:bold;font-size:11px}
 #hud button.play{background:#ffcc00;color:#000;border-color:#ffcc00}
 #stats{margin-left:auto;display:flex;gap:6px;font-size:10px;font-weight:bold;flex-wrap:wrap}#stats span{color:#00e5ff}
-#lobbyUI{position:fixed;inset:0;background:radial-gradient(#1a1a3a,#000);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:90;text-align:center;padding:15px}
-#modeSelect{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:120;flex-direction:column;align-items:center;justify-content:center;padding:15px;overflow:auto}
-#shopUI{display:none;position:fixed;top:62px;left:50%;transform:translateX(-50%);width:98%;max-width:900px;max-height:86vh;background:rgba(15,15,30,0.98);border:3px solid #00e5ff;border-radius:16px;z-index:150;padding:14px;overflow:auto}
-#boxOpen{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+#lobbyUI{position:fixed;inset:0;background:radial-gradient(#1a4a1a,#000);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:90;text-align:center;padding:15px;cursor:auto}
+#modeSelect{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.96);z-index:120;flex-direction:column;align-items:center;justify-content:center;padding:15px;overflow:auto;cursor:auto}
 .modeCard{width:96%;max-width:520px;background:#1c1c2e;border:2px solid #444;border-radius:16px;padding:14px;margin:7px;cursor:pointer;text-align:left}
-.shopTabs{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap}
-.shopTabs button{padding:7px 10px;border-radius:20px;border:2px solid #444;background:#222;color:#fff;cursor:pointer;font-weight:bold;font-size:10px}
-.shopTabs button.active{background:#00e5ff;color:#000}
-.item{display:flex;justify-content:space-between;align-items:center;background:#222;padding:10px;border-radius:9px;margin:5px 0;border:1px solid #333}
-.tier{font-size:9px;padding:3px 7px;border-radius:20px;font-weight:900}
-.t-wood{background:#8b5a2b}.t-stone{background:#888}.t-gold{background:#ffcc00;color:#000}.t-god{background:linear-gradient(90deg,#000,#ffcc00);color:#ffcc00;border:1px solid #ffcc00}
-#rankHUD{position:fixed;left:8px;top:68px;width:285px;background:rgba(20,20,35,0.9);border:2px solid #00e5ff;border-radius:12px;padding:9px;z-index:70;display:none;font-size:10px}
-#roundHUD{position:fixed;right:8px;top:68px;width:175px;background:rgba(0,0,0,0.85);border:2px solid #ffcc00;border-radius:10px;padding:8px;z-index:70;display:none;font-size:10px}
-#cross{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:18px;height:18px;pointer-events:none;z-index:50;display:none}
-#cross:before,#cross:after{content:'';position:absolute;background:#fff}#cross:before{left:8px;top:0;width:2px;height:18px}#cross:after{left:0;top:8px;width:18px;height:2px}
-#msg{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#00e5ff;color:#000;padding:9px 16px;border-radius:20px;font-weight:bold;display:none;z-index:200;font-size:12px}
-#hpBar{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);width:300px;height:12px;background:#333;border-radius:6px;overflow:hidden;z-index:60;display:none}
-#hpFill{height:100%;background:linear-gradient(90deg,#00ff88,#00e5ff)}
+#cross{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:22px;height:22px;pointer-events:none;z-index:50;display:none}
+#cross:before,#cross:after{content:'';position:absolute;background:#fff;box-shadow:0 0 4px #000}#cross:before{left:10px;top:0;width:2px;height:22px}#cross:after{left:0;top:10px;width:22px;height:2px}
+#msg{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:#00e5ff;color:#000;padding:9px 18px;border-radius:20px;font-weight:bold;display:none;z-index:200;font-size:12px}
+#hpBar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);width:320px;height:14px;background:#333;border-radius:7px;overflow:hidden;z-index:60;display:none;border:2px solid #000}
+#hpFill{height:100%;background:linear-gradient(90deg,#ff3333,#00ff88)}
 #playBtn{padding:14px 44px;font-size:18px;background:#ffcc00;color:#000;border:none;border-radius:30px;font-weight:900;cursor:pointer}
-#mobileControls{position:fixed;bottom:5px;left:0;right:0;height:80px;display:none;z-index:80;justify-content:space-between;padding:0 10px;pointer-events:none}
-#mobileControls div{pointer-events:auto}
-.mBtn{width:55px;height:55px;background:rgba(255,255,255,0.15);border:2px solid #00e5ff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;user-select:none}
-.progress{height:5px;background:#333;border-radius:3px;overflow:hidden;margin-top:3px}.progressFill{height:100%;background:linear-gradient(90deg,#00e5ff,#ffcc00)}
+#gunInfo{position:fixed;bottom:50px;right:12px;background:rgba(0,0,0,0.7);padding:6px 10px;border-radius:8px;font-size:11px;z-index:60;display:none}
 </style>
 </head>
 <body>
 <div id="hud">
 <button onclick="goLobby()">LOBBY</button>
 <button class="play" onclick="openModeSelect()">PLAY [P]</button>
-<button onclick="toggleShop()">SHOP [O]</button>
-<button onclick="toggleRank()">RANG [R]</button>
-<div id="stats"><div>MONEY <span id="money">2500</span></div><div>RUNDE <span id="killsRound">0</span></div><div>RANK <span id="rankTxt">HOLZ</span></div><div>HP <span id="hpTxt">100</span></div></div>
+<button onclick="toggleInfo()">INFO [I]</button>
+<div id="stats"><div>MONEY <span id="money">2500</span></div><div>KILLS <span id="killsRound">0</span></div><div>HP <span id="hpTxt">100</span></div><div>RANK <span id="rankTxt">HOLZ</span></div></div>
 </div>
 <div id="lobbyUI">
-<h1 style="color:#00e5ff">V14 FIXED</h1>
-<p style="color:#00ff88">TASTEN GEHEN JETZT + HANDY BUTTONS</p>
-<p style="font-size:11px;color:#aaa">Klick ins Spiel, dann WASD oder Pfeiltasten oder unten Buttons</p>
-<button id="playBtn" onclick="startEasyFarm()">EASY FARM STARTEN (40 Bots 25 HP)</button>
-<button onclick="openModeSelect()" style="margin-top:8px;padding:8px 14px;background:#222;border:2px solid #555;border-radius:20px;color:#fff">ALLE MODI</button>
+<h1 style="color:#00ff88">V15 MINECRAFT EGO</h1>
+<p style="color:#fff;margin:8px">Wie in Minecraft! Waffe siehst du, schießen mit Maus, unendlich weit!</p>
+<p style="font-size:11px;color:#aaa">Klick ins Spiel -> Maus bewegt Kopf -> Linke Maustaste = SCHIESSEN<br>WASD = laufen, LEERTASTE = springen, MAUS = umsehen</p>
+<button id="playBtn" onclick="startEasyFarm()">EASY FARM STARTEN</button>
+<button onclick="openModeSelect()" style="margin-top:10px;padding:8px 16px;background:#222;border:2px solid #555;border-radius:20px;color:#fff">ALLE MODI</button>
 </div>
 <div id="modeSelect">
 <h2 style="color:#00e5ff">MODI</h2>
-<div class="modeCard" onclick="startBR('solo')"><h3>SOLO vs 20</h3></div>
-<div class="modeCard" onclick="startBR('duo')"><h3>DUO Du+1 vs 10 Teams</h3></div>
-<div class="modeCard" onclick="startBR('trio')"><h3>TRIO Du+2 vs 30</h3></div>
-<div class="modeCard" onclick="startEasyFarm()" style="border-color:#00ff88"><h3>4. EASY FARM - 20/50/70 KILLS IN 1 RUNDE</h3><p style="font-size:11px;color:#00ff88">Dein Wunsch - 5er Gruppen, 25 HP, sofort Respawn</p></div>
+<div class="modeCard" onclick="startBR('solo')"><h3>SOLO vs 20</h3><p style="font-size:11px">Battle Royale, Fernkampf</p></div>
+<div class="modeCard" onclick="startBR('duo')"><h3>DUO + Team</h3></div>
+<div class="modeCard" onclick="startEasyFarm()" style="border-color:#00ff88"><h3 style="color:#00ff88">EASY FARM - 20/50/70 Kills leicht</h3><p style="font-size:11px;color:#00ff88">5er Gruppen, 25 HP, Waffe sichtbar, unendlich Reichweite</p></div>
 <button onclick="closeModeSelect()" style="margin-top:8px;padding:7px 14px;background:#333;border-radius:20px;color:#fff">ZURÜCK</button>
 </div>
-<div id="rankHUD"><h3 style="color:#00e5ff;font-size:12px">RANG 20/50/70 IN 1 RUNDE</h3><div id="rankList"></div></div>
-<div id="roundHUD"><b style="color:#ffcc00">RUNDE</b><br>Kills: <span id="riKills" style="color:#00ff88">0</span> / <span id="riNeed">20</span><br><div class="progress"><div id="riBar" class="progressFill" style="width:0%"></div></div></div>
-<div id="shopUI">
-<h2 style="color:#00e5ff">SHOP 4 ABTEILUNGEN</h2>
-<div class="shopTabs">
-<button onclick="setTab('fighter')" id="tabF">1. KÄMPFER</button>
-<button onclick="setTab('weapon')" id="tabW">2. WAFFEN</button>
-<button onclick="setTab('box')" id="tabB" class="active">3. BOXEN</button>
-<button onclick="setTab('skin')" id="tabS">4. SKINS</button>
-<button onclick="toggleShop()" style="margin-left:auto;background:#ff3333">X</button>
-</div>
-<div id="shopList"></div>
-</div>
-<div id="boxOpen"><div style="width:100px;height:100px;background:#222;border:4px solid #ffcc00;border-radius:20px;display:flex;align-items:center;justify-content:center">BOX</div><h2 id="boxText" style="color:#ffcc00">OPEN</h2><p id="boxReward"></p><button onclick="closeBox()" style="padding:8px 16px;background:#00e5ff;border:none;border-radius:20px;font-weight:bold">OK</button></div>
-<div id="cross"></div><div id="hpBar"><div id="hpFill"></div></div><div id="msg"></div>
-<div id="mobileControls">
-<div style="display:flex;gap:5px"><div class="mBtn" id="btnL">A</div><div style="display:flex;flex-direction:column;gap:5px"><div class="mBtn" id="btnU">W</div><div class="mBtn" id="btnD">S</div></div><div class="mBtn" id="btnR">D</div></div>
-<div style="display:flex;gap:8px"><div class="mBtn" id="btnShoot" style="background:#ffcc00;color:#000;border-color:#ffcc00;width:70px;height:70px">SHOOT</div></div>
-</div>
+<div id="cross"></div><div id="hpBar"><div id="hpFill"></div></div><div id="msg"></div><div id="gunInfo">LINKE MAUSTASTE = SCHIESSEN | MAUS = UMSCHAUEN</div>
 <script type="module">
 import * as THREE from 'three';
-let scene,camera,renderer,player,walls=[],bots=[],teammates=[],keys={},mode='lobby',gameMode='br',hp=100,maxHp=100,money=2500,kills=0,killsRound=0,bestKills=0,mouseX=0,lastShoot=0,curRank=0,shopTab='box';
-const ranks=[
-{name:'HOLZ',need:0,hp:100,dmg:15,speed:1.0,color:0x8b5a2b,tier:'wood',price:0},
-{name:'STEIN',need:20,hp:160,dmg:50,speed:1.4,color:0x888888,tier:'stone',price:400},
-{name:'GOLD',need:50,hp:250,dmg:120,speed:1.8,color:0xffcc00,tier:'gold',price:1200},
-{name:'GOTT',need:70,hp:400,dmg:300,speed:2.5,color:0xffcc00,tier:'god',price:3000},
-];
-const fighters=[
-{name:'HOLZ KÄMPFER',price:0,hp:0,dmg:0,speed:1.0,color:0x8b5a2b,tier:'wood'},
-{name:'GOTT KÄMPFER',price:4000,hp:300,dmg:100,speed:2.2,color:0xffcc00,tier:'god'},
-];
-const weapons=[
-{name:'HOLZ WAFFE',price:0,dmg:15,tier:'wood'},
-{name:'GOTT WAFFE',price:6000,dmg:400,tier:'god'},
-];
-const boxes=[
-{name:'HOLZ BOX',price:100,coins:[50,120],rates:{coins:80,skin:15,weapon:4,fighter:1},tier:'wood'},
-{name:'GOTT BOX',price:8000,coins:[5000,12000],rates:{coins:50,skin:25,weapon:15,fighter:10},tier:'god'},
-];
-const skins=[
-{name:'DEFAULT',price:0,color:0x00e5ff,tier:'wood',rare:'COMMON'},
-{name:'GOTT KAISER',price:15000,color:0xffcc00,tier:'god',rare:'GOTT'},
-];
-let curFighter=fighters[0],curWeapon=weapons[0],curSkin=skins[0];
-function msg(t){const m=document.getElementById('msg');m.textContent=t;m.style.display='block';setTimeout(()=>m.style.display='none',2500);}
+let scene,camera,renderer,player,walls=[],bots=[],keys={},mode='lobby',yaw=0,pitch=0,mouseDown=false,lastShoot=0;
+let hp=100,maxHp=100,money=2500,killsRound=0,curRank=0,gameMode='br';
+const ranks=[{name:'HOLZ',need:0,hp:100},{name:'STEIN',need:20,hp:160},{name:'GOLD',need:50,hp:250},{name:'GOTT',need:70,hp:400}];
+let gunMesh,bullets=[];
+function msg(t){const m=document.getElementById('msg');m.textContent=t;m.style.display='block';setTimeout(()=>m.style.display='none',2000);}
 function init(){
-scene=new THREE.Scene();scene.background=new THREE.Color(0x050510);
-camera=new THREE.PerspectiveCamera(75,innerWidth/(innerHeight-60),0.1,500);
-renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight-60);renderer.shadowMap.enabled=true;renderer.domElement.style.marginTop='60px';document.body.appendChild(renderer.domElement);
-scene.add(new THREE.AmbientLight(0xffffff,0.75));const dl=new THREE.DirectionalLight(0xffffff,0.85);dl.position.set(20,30,10);dl.castShadow=true;scene.add(dl);
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(600,600),new THREE.MeshStandardMaterial({color:0x111122}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
-createPlayer();createMaze();createBots(20);
-// FIXED KEY HANDLING
-window.focus();
-renderer.domElement.addEventListener('click',()=>{window.focus();});
+scene=new THREE.Scene();scene.background=new THREE.Color(0x87ceeb);scene.fog=new THREE.Fog(0x87ceeb,40,180);
+camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,500);
+renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;document.body.appendChild(renderer.domElement);
+scene.add(new THREE.AmbientLight(0xffffff,0.85));
+const dl=new THREE.DirectionalLight(0xffffff,0.9);dl.position.set(30,50,20);dl.castShadow=true;scene.add(dl);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(600,600),new THREE.MeshStandardMaterial({color:0x5a9a2a}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+// Minecraft Player = only position, camera is eyes
+player=new THREE.Group();player.position.set(0,1.6,0);scene.add(player);
+// Weapon - blocky like Minecraft
+const gunGroup=new THREE.Group();
+const gunBody=new THREE.Mesh(new THREE.BoxGeometry(0.15,0.1,0.6),new THREE.MeshStandardMaterial({color:0x333333}));gunBody.position.set(0.35,-0.25,-0.5);gunBody.castShadow=true;gunGroup.add(gunBody);
+const gunBarrel=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.06,0.8),new THREE.MeshStandardMaterial({color:0x222222}));gunBarrel.position.set(0.35,-0.22,-0.9);gunGroup.add(gunBarrel);
+const gunColor=new THREE.Mesh(new THREE.BoxGeometry(0.16,0.12,0.2),new THREE.MeshStandardMaterial({color:0x00e5ff}));gunColor.position.set(0.35,-0.25,-0.3);gunGroup.add(gunColor);
+gunMesh=gunGroup;
+camera.add(gunMesh);
+player.add(camera);
+camera.position.set(0,0,0);
+createMaze();createBots(40);
+// Controls
 addEventListener('keydown',e=>{
-const k=e.key.toLowerCase();
-keys[k]=true;
-keys[e.key]=true;
-keys[e.code]=true;
-if(k==='p')openModeSelect();
-if(k==='o')toggleShop();
-if(k==='r')toggleRank();
-if(e.code==='Space'){keys[' ']=true; e.preventDefault();}
+keys[e.key.toLowerCase()]=true;keys[e.code]=true;
+if(e.key.toLowerCase()==='p')openModeSelect();
 });
-addEventListener('keyup',e=>{
-keys[e.key.toLowerCase()]=false;
-keys[e.key]=false;
-keys[e.code]=false;
-if(e.code==='Space')keys[' ']=false;
+addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;keys[e.code]=false;});
+renderer.domElement.addEventListener('click',()=>{
+if(mode==='maze'){renderer.domElement.requestPointerLock();document.getElementById('cross').style.display='block';}
 });
-// Mobile buttons
-setupMobile();
-onresize=()=>{camera.aspect=innerWidth/(innerHeight-60);camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight-60);};
-renderShop();renderRanks();updateHUD();animate();
+document.addEventListener('pointerlockchange',()=>{
+if(document.pointerLockElement===renderer.domElement)document.getElementById('cross').style.display='block';
+else document.getElementById('cross').style.display='none';
+});
+document.addEventListener('mousemove',e=>{
+if(document.pointerLockElement===renderer.domElement&&mode==='maze'){
+yaw-=e.movementX*0.003;
+pitch-=e.movementY*0.003;
+pitch=Math.max(-1.4,Math.min(1.4,pitch));
 }
-function setupMobile(){
-const bind=(id,key)=>{const el=document.getElementById(id);if(!el)return;const on=()=>keys[key]=true;const off=()=>keys[key]=false;el.addEventListener('touchstart',e=>{e.preventDefault();on();});el.addEventListener('touchend',e=>{e.preventDefault();off();});el.addEventListener('mousedown',on);el.addEventListener('mouseup',off);};
-bind('btnU','w');bind('btnD','s');bind('btnL','a');bind('btnR','d');
-const shoot=document.getElementById('btnShoot');
-shoot.addEventListener('touchstart',e=>{e.preventDefault();keys[' ']=true;});
-shoot.addEventListener('touchend',e=>{e.preventDefault();keys[' ']=false;});
-shoot.addEventListener('mousedown',()=>keys[' ']=true);
-shoot.addEventListener('mouseup',()=>keys[' ']=false);
+});
+renderer.domElement.addEventListener('mousedown',e=>{if(e.button===0){mouseDown=true;shoot();}});
+renderer.domElement.addEventListener('mouseup',e=>{if(e.button===0)mouseDown=false;});
+animate();
 }
-function createPlayer(){
-player=new THREE.Group();
-const body=new THREE.Mesh(new THREE.BoxGeometry(0.8,1,0.5),new THREE.MeshStandardMaterial({color:curSkin.color}));body.position.y=1;body.castShadow=true;player.add(body);
-player.userData={body};
-const head=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.6,0.6),new THREE.MeshStandardMaterial({color:0xffdbac}));head.position.y=1.8;player.add(head);
-player.position.set(0,0,0);scene.add(player);
+function createMaze(){
+walls.forEach(w=>scene.remove(w));walls=[];
+for(let i=0;i<50;i++){
+const x=(Math.random()-0.5)*100;const z=(Math.random()-0.5)*100;
+if(Math.abs(x)<8&&Math.abs(z)<8)continue;
+const h=3+Math.random()*2;
+const wall=new THREE.Mesh(new THREE.BoxGeometry(3, h, 3),new THREE.MeshStandardMaterial({color:0x8b5a2b}));wall.position.set(x,h/2,z);wall.castShadow=true;wall.receiveShadow=true;scene.add(wall);walls.push(wall);
 }
-function createBots(n){bots.forEach(b=>scene.remove(b));bots=[];for(let i=0;i<n;i++){bots.push(createBot((Math.random()-0.5)*40,(Math.random()-0.5)*40,Math.random()));}}
-function createBot(x,z,hue){
-const g=new THREE.Group();const b=new THREE.Mesh(new THREE.BoxGeometry(0.7,0.9,0.45),new THREE.MeshStandardMaterial({color:new THREE.Color().setHSL(hue,0.8,0.6)}));b.position.y=0.9;g.add(b);const h=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.5,0.5),new THREE.MeshStandardMaterial({color:0xffdddd}));h.position.y=1.6;g.add(h);g.position.set(x,0,z);g.userData={hp:70,wander:0,shootCD:0,target:null,team:Math.floor(Math.random()*10),easy:false};scene.add(g);return g;
 }
-function createMaze(){walls.forEach(w=>scene.remove(w));walls=[];const size=30,cell=5;for(let i=0;i<size;i++)for(let j=0;j<size;j++)if(Math.random()<0.33||i==0||j==0||i==size-1||j==size-1){if(i==15&&j==15)continue;const wall=new THREE.Mesh(new THREE.BoxGeometry(cell,4.5,cell),new THREE.MeshStandardMaterial({color:0x2a2a4a}));wall.position.set((i-size/2)*cell,2.2,(j-size/2)*cell);scene.add(wall);walls.push(wall);}}
-function hasLOS(a,b){const steps=18;for(let s=1;s<steps;s++){const x=a.x+(b.x-a.x)*(s/steps);const z=a.z+(b.z-a.z)*(s/steps);for(let w of walls){if(Math.abs(x-w.position.x)<2.6&&Math.abs(z-w.position.z)<2.6)return false;}}return true;}
-function checkWall(p){for(let w of walls){if(Math.abs(p.x-w.position.x)<2.6&&Math.abs(p.z-w.position.z)<2.6)return true;}return false;}
-window.openModeSelect=()=>{document.getElementById('modeSelect').style.display='flex';};
+function createBots(n){bots.forEach(b=>scene.remove(b));bots=[];for(let i=0;i<n;i++)spawnBot();}
+function spawnBot(){
+const g=new THREE.Group();
+const col=new THREE.Color().setHSL(Math.random(),0.8,0.6);
+const body=new THREE.Mesh(new THREE.BoxGeometry(0.8,1,0.4),new THREE.MeshStandardMaterial({color:col}));body.position.y=1;body.castShadow=true;g.add(body);
+const head=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.6,0.6),new THREE.MeshStandardMaterial({color:0xffdbac}));head.position.y=1.8;head.castShadow=true;g.add(head);
+g.position.set((Math.random()-0.5)*90,0,(Math.random()-0.5)*90);
+if(g.position.length()<12){g.position.set((Math.random()-0.5)*90,0,(Math.random()-0.5)*90);}
+g.userData={hp: gameMode==='farm'?25:80, maxHp:80};scene.add(g);bots.push(g);
+}
+function checkWall(p){
+for(let w of walls){if(Math.abs(p.x-w.position.x)<2.2&&Math.abs(p.z-w.position.z)<2.2)return true;}
+return false;
+}
+function shoot(){
+if(mode!=='maze')return;
+if(Date.now()-lastShoot<120)return;
+lastShoot=Date.now();
+// Muzzle flash
+if(gunMesh) {gunMesh.children[1].material.emissive=new THREE.Color(0xffcc00);setTimeout(()=>{gunMesh.children[1].material.emissive=new THREE.Color(0x000000);},50);}
+// Ray from camera center
+const ray=new THREE.Raycaster();
+ray.setFromCamera(new THREE.Vector2(0,0),camera);
+const hits=ray.intersectObjects(walls.concat(bots.flatMap(b=>b.children)),false);
+// Bullet tracer visual
+const dir=new THREE.Vector3(0,0,-1);dir.applyQuaternion(camera.quaternion);
+const start=camera.getWorldPosition(new THREE.Vector3());
+const end=start.clone().add(dir.multiplyScalar(100));
+if(hits.length>0){end.copy(hits[0].point);}
+// tracer line
+const geo=new THREE.BufferGeometry().setFromPoints([start,end]);
+const line=new THREE.Line(geo,new THREE.LineBasicMaterial({color:0xffff00}));scene.add(line);
+setTimeout(()=>scene.remove(line),60);
+// particle at hit
+const spark=new THREE.Mesh(new THREE.SphereGeometry(0.15,6,6),new THREE.MeshBasicMaterial({color:0xffcc00}));spark.position.copy(end);scene.add(spark);setTimeout(()=>scene.remove(spark),100);
+// Damage bots - check first bot hit
+for(let h of hits){
+let bot=null;
+for(let b of bots){if(h.object.parent===b||b.children.includes(h.object)){bot=b;break;}}
+if(bot){
+bot.userData.hp-= (gameMode==='farm'? 35 : 28);
+bot.children[0].material.color.set(0xff0000);setTimeout(()=>bot.children[0].material.color.setHSL(Math.random(),0.8,0.6),80);
+if(bot.userData.hp<=0){
+scene.remove(bot);bots.splice(bots.indexOf(bot),1);killsRound++;money+=120;
+document.getElementById('money').textContent=money;document.getElementById('killsRound').textContent=killsRound;
+// update rank
+let nr=0;for(let i=0;i<ranks.length;i++){if(killsRound>=ranks[i].need)nr=i;}curRank=nr;
+document.getElementById('rankTxt').textContent=ranks[curRank].name;
+msg('HIT! Kills: '+killsRound);
+spawnBot();
+}
+break;
+}else{
+// wall hit
+break;
+}
+}
+}
+window.openModeSelect=()=>{document.getElementById('modeSelect').style.display='flex';document.exitPointerLock();};
 window.closeModeSelect=()=>{document.getElementById('modeSelect').style.display='none';};
-window.toggleShop=()=>{const s=document.getElementById('shopUI');s.style.display=s.style.display==='flex'?'none':'flex';renderShop();};
-window.toggleRank=()=>{const r=document.getElementById('rankHUD');const r2=document.getElementById('roundHUD');const show=r.style.display==='none';r.style.display=show?'block':'none';if(mode==='maze')r2.style.display=show?'block':'none';};
-window.setTab=(t)=>{shopTab=t;document.querySelectorAll('.shopTabs button').forEach(b=>b.classList.remove('active'));document.getElementById({fighter:'tabF',weapon:'tabW',box:'tabB',skin:'tabS'}[t]).classList.add('active');renderShop();};
-function renderRanks(){
-const list=document.getElementById('rankList');list.innerHTML='';
-ranks.forEach((r,i)=>{
-const isCur=curRank===i;const prog=Math.min(100,(killsRound/r.need)*100||0);
-const div=document.createElement('div');div.style.cssText=`display:flex;justify-content:space-between;padding:5px;background:${isCur?'#1a2a3a':'#222'};margin:3px 0;border-radius:6px`;
-div.innerHTML=`<div><b>${r.name}</b> ${r.need} Kills 1 Runde</div><div>${isCur?killsRound+'/'+r.need:''}</div>`;
-list.appendChild(div);
-});
-const next=ranks.find(r=>killsRound<r.need)||ranks[ranks.length-1];
-document.getElementById('riKills').textContent=killsRound;document.getElementById('riNeed').textContent=next.need;document.getElementById('riBar').style.width=Math.min(100,(killsRound/next.need)*100)+'%';
-}
-function renderShop(){
-const list=document.getElementById('shopList');list.innerHTML='';
-if(shopTab==='box'){boxes.forEach(b=>{const d=document.createElement('div');d.className='item';d.innerHTML=`<div><b>${b.name}</b></div><button onclick="buyBox('${b.name}')">OPEN ${b.price}</button>`;list.appendChild(d);});}
-if(shopTab==='fighter'){fighters.forEach((f,i)=>{const d=document.createElement('div');d.className='item';d.innerHTML=`<div>${f.name}</div><button onclick="buyFighter(${i})">BUY ${f.price}</button>`;list.appendChild(d);});}
-if(shopTab==='weapon'){weapons.forEach((w,i)=>{const d=document.createElement('div');d.className='item';d.innerHTML=`<div>${w.name} DMG ${w.dmg}</div><button onclick="buyWeapon(${i})">BUY ${w.price}</button>`;list.appendChild(d);});}
-if(shopTab==='skin'){skins.forEach((s,i)=>{const d=document.createElement('div');d.className='item';d.innerHTML=`<div>${s.name}</div><button onclick="buySkin(${i})">BUY ${s.price}</button>`;list.appendChild(d);});}
-}
-window.buyFighter=(i)=>{if(money<fighters[i].price){msg('KEIN GELD');return;}money-=fighters[i].price;curFighter=fighters[i];maxHp=ranks[curRank].hp+fighters[i].hp;hp=maxHp;updateHUD();};
-window.buyWeapon=(i)=>{if(money<weapons[i].price){msg('KEIN GELD');return;}money-=weapons[i].price;curWeapon=weapons[i];};
-window.buySkin=(i)=>{if(money<skins[i].price){msg('KEIN GELD');return;}money-=skins[i].price;curSkin=skins[i];if(player)player.userData.body.material.color.set(skins[i].color);};
-window.buyBox=(name)=>{
-const b=boxes.find(x=>x.name===name);if(money<b.price){msg('KEIN GELD');return;}money-=b.price;updateHUD();
-document.getElementById('boxOpen').style.display='flex';
-setTimeout(()=>{
-const c=Math.floor(b.coins[0]+Math.random()*(b.coins[1]-b.coins[0]));money+=c;
-document.getElementById('boxText').textContent='+'+c+' COINS!';document.getElementById('boxReward').textContent='70% Chance';
-updateHUD();
-},600);
-};
-window.closeBox=()=>{document.getElementById('boxOpen').style.display='none';};
 window.goLobby=()=>{
-mode='lobby';document.getElementById('lobbyUI').style.display='flex';document.getElementById('modeSelect').style.display='none';document.getElementById('cross').style.display='none';document.getElementById('hpBar').style.display='none';document.getElementById('shopUI').style.display='none';document.getElementById('rankHUD').style.display='none';document.getElementById('roundHUD').style.display='none';document.getElementById('mobileControls').style.display='none';
-scene.background=new THREE.Color(0x050510);player.position.set(0,0,0);hp=maxHp;createBots(20);updateHUD();
+mode='lobby';document.getElementById('lobbyUI').style.display='flex';document.getElementById('cross').style.display='none';document.getElementById('hpBar').style.display='none';document.getElementById('gunInfo').style.display='none';document.exitPointerLock();player.position.set(0,1.6,0);yaw=0;pitch=0;killsRound=0;updateHUD();
 };
-window.startBR=(type)=>{
-mode='maze';document.getElementById('modeSelect').style.display='none';document.getElementById('lobbyUI').style.display='none';document.getElementById('cross').style.display='block';document.getElementById('hpBar').style.display='block';document.getElementById('rankHUD').style.display='block';document.getElementById('roundHUD').style.display='block';document.getElementById('mobileControls').style.display='flex';
-scene.background=new THREE.Color(0x87ceeb);bots.forEach(b=>scene.remove(b));bots=[];for(let i=0;i<20;i++)bots.push(createBot((Math.random()-0.5)*70,(Math.random()-0.5)*70+20,Math.random()));
-player.position.set(0,0,70);hp=maxHp;killsRound=0;updateHUD();msg('BR START - WASD GEHT JETZT!');
+window.startBR=(t)=>{
+mode='maze';gameMode='br';document.getElementById('modeSelect').style.display='none';document.getElementById('lobbyUI').style.display='none';document.getElementById('hpBar').style.display='block';document.getElementById('gunInfo').style.display='block';player.position.set(0,1.6,20);yaw=0;pitch=0;killsRound=0;createBots(20);msg('KLICK INS SPIEL -> MAUS BEWEGT KOPF -> LINKS KLICK SCHIESST - UNENDLICH WEIT!');
 };
 window.startEasyFarm=()=>{
-mode='maze';gameMode='farm';document.getElementById('modeSelect').style.display='none';document.getElementById('lobbyUI').style.display='none';document.getElementById('cross').style.display='block';document.getElementById('hpBar').style.display='block';document.getElementById('rankHUD').style.display='block';document.getElementById('roundHUD').style.display='block';document.getElementById('mobileControls').style.display='flex';
-scene.background=new THREE.Color(0x1a4a1a);bots.forEach(b=>scene.remove(b));bots=[];
-for(let g=0;g<8;g++){const gx=(Math.random()-0.5)*60;const gz=(Math.random()-0.5)*60;for(let j=0;j<5;j++){const b=createBot(gx+(Math.random()-0.5)*6,gz+(Math.random()-0.5)*6,Math.random());b.userData.hp=25;b.userData.easy=true;bots.push(b);}}
-player.position.set(0,0,0);hp=maxHp;killsRound=0;updateHUD();msg('EASY FARM - WASD + SHOOT BUTTON UNTEN');
+mode='maze';gameMode='farm';document.getElementById('modeSelect').style.display='none';document.getElementById('lobbyUI').style.display='none';document.getElementById('hpBar').style.display='block';document.getElementById('gunInfo').style.display='block';player.position.set(0,1.6,0);yaw=0;pitch=0;killsRound=0;bots.forEach(b=>scene.remove(b));bots=[];for(let g=0;g<8;g++){const gx=(Math.random()-0.5)*60;const gz=(Math.random()-0.5)*60;for(let j=0;j<5;j++){const b=spawnBotEasy(gx+(Math.random()-0.5)*6,gz+(Math.random()-0.5)*6);}}msg('EASY FARM - MAUS KLICK = SCHUSS - UNENDLICH WEIT - WAFFE SICHTBAR!');
 };
+function spawnBotEasy(x,z){
+const g=new THREE.Group();const body=new THREE.Mesh(new THREE.BoxGeometry(0.8,1,0.4),new THREE.MeshStandardMaterial({color:0x00ff88}));body.position.y=1;g.add(body);const head=new THREE.Mesh(new THREE.BoxGeometry(0.6,0.6,0.6),new THREE.MeshStandardMaterial({color:0xffdbac}));head.position.y=1.8;g.add(head);g.position.set(x,0,z);g.userData={hp:25};scene.add(g);bots.push(g);return g;
+}
 function updateHUD(){
 document.getElementById('money').textContent=money;
 document.getElementById('killsRound').textContent=killsRound;
 document.getElementById('rankTxt').textContent=ranks[curRank].name;
-document.getElementById('hpTxt').textContent=Math.floor(hp);
 document.getElementById('hpFill').style.width=(hp/maxHp*100)+'%';
-renderRanks();
-if(hp<=0&&mode==='maze'){msg('DEAD - LOBBY');setTimeout(goLobby,800);}
 }
+window.toggleInfo=()=>{msg('WASD laufen, MAUS umsehen, LINKE MAUSTASTE schießen, aus jeder Distanz!');}
 function animate(){
 requestAnimationFrame(animate);
-if(!player)return;
-let spd=0.18*ranks[curRank].speed*curFighter.speed;
-let nx=player.position.x,nz=player.position.z;
-// FIXED - prüft W,A,S,D + Pfeiltasten + Arrow + Space Code
-if(keys['w']||keys['ArrowUp']||keys['KeyW']) nz-=spd;
-if(keys['s']||keys['ArrowDown']||keys['KeyS']) nz+=spd;
-if(keys['a']||keys['ArrowLeft']||keys['KeyA']) nx-=spd;
-if(keys['d']||keys['ArrowRight']||keys['KeyD']) nx+=spd;
-const np=new THREE.Vector3(nx,0,nz);
-if(mode==='maze'){if(!checkWall(np)) {player.position.x=nx;player.position.z=nz;}} else {player.position.x=nx;player.position.z=nz;}
-
-if((keys[' ']||keys['Space']||keys[' '])&&Date.now()-lastShoot>160&&mode==='maze'){
-lastShoot=Date.now();
-bots.forEach((b,i)=>{if(player.position.distanceTo(b.position)<6&&hasLOS(player.position,b.position)){let dmg=curWeapon.dmg*0.35+ranks[curRank].dmg*0.15;if(gameMode==='farm')dmg=curWeapon.dmg*1.2; b.userData.hp-=dmg; if(b.userData.hp<=0){scene.remove(b);bots.splice(i,1);kills++;killsRound++;money+=150;updateHUD(); const nb=createBot((Math.random()-0.5)*60,(Math.random()-0.5)*60,Math.random()); if(gameMode==='farm'){nb.userData.hp=25;nb.userData.easy=true;} bots.push(nb);}}});
+if(mode==='maze'){
+let spd=0.18;
+if(keys['shift'])spd=0.32;
+let forward=new THREE.Vector3(0,0,0);let right=new THREE.Vector3(0,0,0);
+if(keys['w']||keys['arrowup'])forward.z=-1;
+if(keys['s']||keys['arrowdown'])forward.z=1;
+if(keys['a']||keys['arrowleft'])right.x=-1;
+if(keys['d']||keys['arrowright'])right.x=1;
+forward.applyAxisAngle(new THREE.Vector3(0,1,0),yaw);
+right.applyAxisAngle(new THREE.Vector3(0,1,0),yaw);
+const move=new THREE.Vector3().addVectors(forward,right);
+if(move.length()>0){move.normalize().multiplyScalar(spd);}
+const np=player.position.clone().add(move);
+if(!checkWall(np)){player.position.copy(np);}
+if(keys[' ']&&player.position.y<2){player.position.y+=0.3;}
+player.position.y=THREE.MathUtils.lerp(player.position.y,1.6,0.1);
+player.rotation.y=yaw;
+camera.rotation.x=pitch;
+camera.rotation.y=0;camera.rotation.z=0;
+camera.rotation.order='YXZ';
+if(mouseDown)shoot();
 }
-bots.forEach(bot=>{
-let target=null;
-if(Math.random()<0.3){let nearest=null,nd=999;bots.forEach((o,j)=>{if(bot===o)return;const d=bot.position.distanceTo(o.position);if(d<nd&&d<12&&hasLOS(bot.position,o.position)){nearest=o;nd=d;}}); if(nearest) target=nearest.position;}
-if(!target){bot.userData.wander--; if(bot.userData.wander<=0){bot.userData.target=new THREE.Vector3((Math.random()-0.5)*60,0,(Math.random()-0.5)*60); bot.userData.wander=80;} target=bot.userData.target;}
-if(target){const dir=new THREE.Vector3().subVectors(target,bot.position);dir.y=0;dir.normalize();bot.position.add(dir.multiplyScalar(0.05));}
-});
-const cam=new THREE.Vector3(player.position.x,player.position.y+4,player.position.z+7);
-camera.position.lerp(cam,0.12);camera.lookAt(player.position.x,player.position.y+1,player.position.z);
 renderer.render(scene,camera);
 }
 init();
