@@ -1,29 +1,138 @@
 <!DOCTYPE html>
-<html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ULTIMATE FAMILY BATTLE</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0d0d0d;color:#fff;font-family:Arial;overflow:hidden}#hud{position:fixed;top:0;left:0;right:0;height:62px;background:#1c1c1c;border-bottom:3px solid #00e5ff;display:flex;align-items:center;gap:6px;padding:0 10px;z-index:100}#hud button{background:#2a2a2a;color:#fff;border:2px solid #00e5ff;padding:7px 10px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:12px}#stats{margin-left:auto;display:flex;gap:12px;font-size:13px;font-weight:bold}#stats span{color:#00e5ff}#gameCanvas{display:block;margin-top:62px;width:100vw;height:calc(100vh - 62px);background:#111}.panel{position:fixed;top:70px;left:50%;transform:translateX(-50%);width:92%;max-width:700px;max-height:80vh;background:#1e1e1e;border:3px solid #00e5ff;border-radius:12px;padding:18px;overflow:auto;display:none;z-index:200}.item{background:#2a2a2a;border:1px solid #444;padding:10px;border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}.item button{background:#00e5ff;color:#000;border:none;padding:6px 10px;border-radius:6px;font-weight:bold;cursor:pointer}#msg{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#00e5ff;color:#000;padding:10px 18px;border-radius:20px;font-weight:bold;display:none;z-index:300}</style></head><body>
-<div id="hud"><button onclick="openPanel('shop')">SHOP</button><button onclick="openPanel('skins')">SKINS</button><button onclick="openPanel('ult')">ULTIMATES</button><button onclick="switchChar()">SWITCH [Q]</button><button onclick="openPanel('family')">FAMILY</button><div id="stats"><div>MONEY: <span id="money">500</span></div><div>LVL: <span id="lvl">1</span></div><div>CHAR: <span id="charName">CYAN</span></div></div></div>
+<html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ULTIMATE FAMILY BATTLE - ROBOT UPDATE</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0d0d0d;color:#fff;font-family:Arial;overflow:hidden}#hud{position:fixed;top:0;left:0;right:0;height:62px;background:#1c1c1c;border-bottom:3px solid #00e5ff;display:flex;align-items:center;gap:6px;padding:0 10px;z-index:100;flex-wrap:wrap}#hud button{background:#2a2a2a;color:#fff;border:2px solid #00e5ff;padding:7px 10px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:11px}#hud button.active{border-color:#ffcc00;color:#ffcc00}#stats{margin-left:auto;display:flex;gap:10px;font-size:12px;font-weight:bold}#stats span{color:#00e5ff}#gameCanvas{display:block;margin-top:62px;width:100vw;height:calc(100vh - 62px);background:radial-gradient(#1a1a2e,#111)}.panel{position:fixed;top:70px;left:50%;transform:translateX(-50%);width:92%;max-width:700px;max-height:80vh;background:#1e1e1e;border:3px solid #00e5ff;border-radius:12px;padding:18px;overflow:auto;display:none;z-index:200}.item{background:#2a2a2a;border:1px solid #444;padding:10px;border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}.item button{background:#00e5ff;color:#000;border:none;padding:6px 10px;border-radius:6px;font-weight:bold;cursor:pointer}.item button:disabled{background:#555;color:#888}#msg{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#00e5ff;color:#000;padding:10px 18px;border-radius:20px;font-weight:bold;display:none;z-index:300}</style></head><body>
+<div id="hud"><button onclick="openPanel('weapons')">WEAPONS</button><button onclick="openPanel('shop')">SHOP</button><button onclick="openPanel('skins')">SKINS</button><button onclick="switchChar()">SWITCH [Q]</button><button onclick="openPanel('family')">FAMILY</button><div id="stats"><div>WPN: <span id="wpnName">PISTOL</span></div><div>MONEY: <span id="money">600</span></div><div>LVL: <span id="lvl">1</span></div><div>CHAR: <span id="charName">DAD</span></div></div></div>
 <canvas id="gameCanvas"></canvas>
-<div id="shop" class="panel"><h2>SHOP</h2><div class="item"><span>SPEED +1 (200)</span><button onclick="buy('speed')">BUY</button></div><div class="item"><span>DAMAGE +10 (300)</span><button onclick="buy('dmg')">BUY</button></div><div class="item"><span>HEALTH +20 (250)</span><button onclick="buy('hp')">BUY</button></div><div class="item"><span>COIN BOOST x2 (1000)</span><button onclick="buy('coin')">BUY</button></div><button onclick="closePanels()">CLOSE</button></div>
-<div id="skins" class="panel"><h2>SKINS</h2><div class="item"><span>CYAN - FREE</span><button onclick="setSkin('cyan')">USE</button></div><div class="item"><span>RED - 100</span><button onclick="buySkin('red',100)">BUY</button></div><div class="item"><span>GREEN - 100</span><button onclick="buySkin('green',100)">BUY</button></div><div class="item"><span>GOLD - 500</span><button onclick="buySkin('gold',500)">BUY</button></div><button onclick="closePanels()">CLOSE</button></div>
-<div id="ult" class="panel"><h2>ULTIMATES [R]</h2><div class="item"><span>BLAST - 500 DMG (300)</span><button onclick="buyUlt('blast')">BUY</button></div><div class="item"><span>HEAL - +100 HP (300)</span><button onclick="buyUlt('heal')">BUY</button></div><div class="item"><span>TIME STOP - 3s (800)</span><button onclick="buyUlt('stop')">BUY</button></div><button onclick="closePanels()">CLOSE</button></div>
-<div id="family" class="panel"><h2>FAMILY TEAM</h2><div class="item"><span>DAD - Tank [HP 200]</span><button onclick="setChar(0)">SELECT</button></div><div class="item"><span>MOM - Healer</span><button onclick="setChar(1)">SELECT</button></div><div class="item"><span>KID 1 - Speed</span><button onclick="setChar(2)">SELECT</button></div><div class="item"><span>KID 2 - Damage</span><button onclick="setChar(3)">SELECT</button></div><button onclick="closePanels()">CLOSE</button></div>
+
+<div id="weapons" class="panel"><h2>WEAPONS SHOP - NEW!</h2>
+<div class="item"><span><b>PISTOL</b> - 15 DMG | Fast - FREE</span><button onclick="setWeapon(0)">SELECT</button></div>
+<div class="item"><span><b>SHOTGUN</b> - 40 DMG | 3 Bullets - 400</span><button onclick="buyWeapon(1)">BUY</button></div>
+<div class="item"><span><b>LASER RIFLE</b> - 25 DMG | Super Fast | Laser - 800</span><button onclick="buyWeapon(2)">BUY</button></div>
+<div class="item"><span><b>ROCKET LAUNCHER</b> - 100 DMG | Explosion - 1200</span><button onclick="buyWeapon(3)">BUY</button></div>
+<button onclick="closePanels()">CLOSE</button></div>
+
+<div id="shop" class="panel"><h2>UPGRADES</h2><div class="item"><span>SPEED +1 (200)</span><button onclick="buy('speed')">BUY</button></div><div class="item"><span>HEALTH +20 (250)</span><button onclick="buy('hp')">BUY</button></div><div class="item"><span>COIN BOOST x2 (1000)</span><button onclick="buy('coin')">BUY</button></div><button onclick="closePanels()">CLOSE</button></div>
+<div id="skins" class="panel"><h2>SKINS</h2><div class="item"><span>CYAN - FREE</span><button onclick="setSkin('cyan')">USE</button></div><div class="item"><span>RED - 100</span><button onclick="buySkin('red',100)">BUY</button></div><div class="item"><span>GOLD - 500</span><button onclick="buySkin('gold',500)">BUY</button></div><button onclick="closePanels()">CLOSE</button></div>
+<div id="family" class="panel"><h2>FAMILY TEAM</h2><div class="item"><span>DAD - Tank [HP 200]</span><button onclick="setChar(0)">SELECT</button></div><div class="item"><span>MOM - Healer [HP 120]</span><button onclick="setChar(1)">SELECT</button></div><div class="item"><span>KID 1 - Speed [HP 80]</span><button onclick="setChar(2)">SELECT</button></div><div class="item"><span>KID 2 - Damage [HP 100]</span><button onclick="setChar(3)">SELECT</button></div><button onclick="closePanels()">CLOSE</button></div>
 <div id="msg"></div>
+
 <script>
 const canvas=document.getElementById('gameCanvas');const ctx=canvas.getContext('2d');let W,H;function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight-62;}resize();onresize=resize;
-let money=500,lvl=1,xp=0,speed=4,dmg=20,hp=100,maxHp=100,coinMult=1,color='cyan',charId=0;let x=W/2,y=H/2,keys={},enemies=[],particles=[],lastUlt=0;
+let money=600,lvl=1,xp=0,speed=4,hp=200,maxHp=200,coinMult=1,color='cyan',charId=0;let x=W/2,y=H/2,keys={},enemies=[],bullets=[],particles=[],weaponId=0;
+
+const weapons=[
+ {name:'PISTOL',dmg:15,cooldown:12,spread:0.08,bullets:1,price:0,col:'#ffcc00'},
+ {name:'SHOTGUN',dmg:18,cooldown:30,spread:0.35,bullets:3,price:400,col:'#ff8800'},
+ {name:'LASER RIFLE',dmg:25,cooldown:6,spread:0.02,bullets:1,price:800,col:'#00ffff'},
+ {name:'ROCKET LAUNCHER',dmg:100,cooldown:60,spread:0.05,bullets:1,price:1200,col:'#ff0000',explosive:true}
+];
+const weaponsOwned=[0];
+
 const chars=[{name:'DAD',color:'cyan',hp:200},{name:'MOM',color:'#ff88cc',hp:120},{name:'KID1',color:'#00ff88',hp:80},{name:'KID2',color:'#ffcc00',hp:100}];
-const skinsOwned=['cyan'];const ultsOwned=[];
+const skinsOwned=['cyan'];
 function showMsg(t){const m=document.getElementById('msg');m.textContent=t;m.style.display='block';setTimeout(()=>m.style.display='none',2000);}
-function updateHUD(){document.getElementById('money').textContent=money;document.getElementById('lvl').textContent=lvl;document.getElementById('charName').textContent=chars[charId].name;}
+function updateHUD(){document.getElementById('money').textContent=money;document.getElementById('lvl').textContent=lvl;document.getElementById('charName').textContent=chars[charId].name;document.getElementById('wpnName').textContent=weapons[weaponId].name;}
 function openPanel(id){closePanels();document.getElementById(id).style.display='block';}function closePanels(){document.querySelectorAll('.panel').forEach(p=>p.style.display='none');}
-function buy(t){if(t==='speed'&&money>=200){money-=200;speed++;showMsg('SPEED UP');}else if(t==='dmg'&&money>=300){money-=300;dmg+=10;showMsg('DAMAGE UP');}else if(t==='hp'&&money>=250){money-=250;maxHp+=20;hp=maxHp;showMsg('HEALTH UP');}else if(t==='coin'&&money>=1000){money-=1000;coinMult=2;showMsg('COIN x2');}else{showMsg('NO MONEY');}updateHUD();}
+function buy(t){if(t==='speed'&&money>=200){money-=200;speed++;showMsg('SPEED UP');}else if(t==='hp'&&money>=250){money-=250;maxHp+=20;hp=maxHp;showMsg('HEALTH UP');}else if(t==='coin'&&money>=1000){money-=1000;coinMult=2;showMsg('COIN x2');}else{showMsg('NO MONEY');}updateHUD();}
 function setSkin(c){if(skinsOwned.includes(c)){color=c;chars[charId].color=c;showMsg('SKIN '+c);closePanels();}}
 function buySkin(c,p){if(money>=p){money-=p;skinsOwned.push(c);showMsg('BOUGHT '+c);}else{showMsg('NO MONEY');}updateHUD();}
-function buyUlt(u){if(money>=300&&!ultsOwned.includes(u)){money-=300;ultsOwned.push(u);showMsg('ULT '+u);}else{showMsg('NO MONEY OR OWNED');}updateHUD();}
 function setChar(i){charId=i;color=chars[i].color;maxHp=chars[i].hp;hp=maxHp;updateHUD();showMsg('CHAR '+chars[i].name);closePanels();}
 function switchChar(){charId=(charId+1)%4;setChar(charId);}
-addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key.toLowerCase()==='q')switchChar();if(e.key.toLowerCase()==='r')useUlt();if(e.key==='Escape')closePanels();});
+function setWeapon(id){if(weaponsOwned.includes(id)){weaponId=id;updateHUD();showMsg(weapons[id].name+' EQUIPPED');closePanels();}}
+function buyWeapon(id){if(weaponsOwned.includes(id)){setWeapon(id);return;}if(money>=weapons[id].price){money-=weapons[id].price;weaponsOwned.push(id);weaponId=id;updateHUD();showMsg('BOUGHT '+weapons[id].name);}else{showMsg('NO MONEY');}}
+
+addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key.toLowerCase()==='q')switchChar();if(e.key==='Escape')closePanels();});
 addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;});
-function useUlt(){if(Date.now()-lastUlt<5000){showMsg('COOLDOWN');return;}if(!ultsOwned.length){showMsg('NO ULT - BUY FIRST');return;}lastUlt=Date.now();const u=ultsOwned[0];if(u==='blast'){enemies=[];for(let i=0;i<15;i++)particles.push({x:x,y:y,vx:(Math.random()-0.5)*10,vy:(Math.random()-0.5)*10,life:30});money+=100;showMsg('BLAST!');}if(u==='heal'){hp=Math.min(maxHp,hp+100);showMsg('HEAL!');}if(u==='stop'){showMsg('TIME STOP 3s');}}
-function spawnE(){if(enemies.length<8)enemies.push({x:Math.random()*W,y:Math.random()*H,hp:50});}setInterval(spawnE,2000);
-function loop(){ctx.fillStyle='#111';ctx.fillRect(0,0,W,H);let nx=0,ny=0;if(keys['w'])ny=-speed;if(keys['s'])ny=speed;if(keys['a'])nx=-speed;if(keys['d'])nx=speed;x+=nx;y+=ny;x=Math.max(20,Math.min(W-20,x));y=Math.max(20,Math.min(H-20,y));ctx.fillStyle=color;ctx.fillRect(x-15,y-15,30,30);ctx.fillStyle='#fff';ctx.fillRect(x-15,y-20,(hp/maxHp)*30,4);enemies.forEach((e,i)=>{e.x+=(x-e.x)*0.01;e.y+=(y-e.y)*0.01;ctx.fillStyle='#ff3333';ctx.fillRect(e.x-10,e.y-10,20,20);if(Math.hypot(x-e.x,y-e.y)<25){hp-=0.5;if(hp<=0){hp=maxHp;money=Math.max(0,money-50);showMsg('DEAD - RESPAWN');x=W/2;y=H/2;}}if(Math.hypot(x-e.x,y-e.y)<35&&keys[' ']){e.hp-=dmg*0.1;if(e.hp<=0){enemies.splice(i,1);money+=10*coinMult;xp+=10;if(xp>=100){lvl++;xp=0;showMsg('LEVEL UP LVL '+lvl);}updateHUD();}}});particles.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;p.life--;ctx.fillStyle='#00e5ff';ctx.fillRect(p.x,p.y,4,4);if(p.life<=0)particles.splice(i,1);});ctx.fillStyle='#888';ctx.font='12px Arial';ctx.fillText('WASD=MOVE | SPACE=ATTACK | Q=SWITCH | R=ULT',10,20);requestAnimationFrame(loop);}loop();showMsg('GAME LOADED - NO EMOJIS - SAFE!');
+
+function drawRealisticRobot(ex,ey,angle,hpPercent){
+ ctx.save();ctx.translate(ex,ey);ctx.rotate(angle);
+ // shadow
+ ctx.fillStyle='rgba(0,0,0,0.4)';ctx.beginPath();ctx.ellipse(0,18,14,4,0,0,Math.PI*2);ctx.fill();
+ // legs
+ ctx.fillStyle='#555';ctx.fillRect(-8,8,5,12);ctx.fillRect(3,8,5,12);
+ ctx.fillStyle='#222';ctx.fillRect(-9,19,7,3);ctx.fillRect(2,19,7,3);
+ // body - metallic gradient
+ let grad=ctx.createLinearGradient(-12,-8,12,10);grad.addColorStop(0,'#8a8a8a');grad.addColorStop(0.5,'#e0e0e0');grad.addColorStop(1,'#4a4a4a');
+ ctx.fillStyle=grad;ctx.fillRect(-12,-8,24,18);
+ ctx.strokeStyle='#00e5ff';ctx.lineWidth=1;ctx.strokeRect(-12,-8,24,18);
+ // chest light
+ ctx.fillStyle='#00e5ff';ctx.fillRect(-3,-2,6,4);
+ // arms
+ ctx.fillStyle='#666';ctx.fillRect(-18,-2,6,10);ctx.fillRect(12,-2,6,10);
+ ctx.fillStyle='#333';ctx.beginPath();ctx.arc(-15,10,4,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(15,10,4,0,Math.PI*2);ctx.fill();
+ // head
+ let headGrad=ctx.createLinearGradient(-8,-20,8,-8);headGrad.addColorStop(0,'#777');headGrad.addColorStop(1,'#ddd');
+ ctx.fillStyle=headGrad;ctx.fillRect(-9,-20,18,12);
+ // eyes - glowing red
+ ctx.fillStyle='#ff0000';ctx.shadowColor='#ff0000';ctx.shadowBlur=6;
+ ctx.beginPath();ctx.arc(-4,-14,2.5,0,Math.PI*2);ctx.fill();
+ ctx.beginPath();ctx.arc(4,-14,2.5,0,Math.PI*2);ctx.fill();
+ ctx.shadowBlur=0;
+ // antenna
+ ctx.fillStyle='#444';ctx.fillRect(-1,-24,2,4);ctx.fillStyle='#ff0000';ctx.beginPath();ctx.arc(0,-25,2,0,Math.PI*2);ctx.fill();
+ // hp bar
+ ctx.fillStyle='#000';ctx.fillRect(-14,-28,28,4);ctx.fillStyle=hpPercent>0.5?'#0f0':hpPercent>0.2?'#ff0':'#f00';ctx.fillRect(-13,-27,26*hpPercent,2);
+ ctx.restore();
+}
+
+function drawPlayer(px,py){
+ ctx.save();ctx.translate(px,py);
+ ctx.fillStyle='rgba(0,0,0,0.3)';ctx.beginPath();ctx.ellipse(0,18,12,4,0,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle=color;ctx.fillRect(-12,-10,24,20);ctx.fillStyle='#fff';ctx.fillRect(-10,-8,6,4);
+ ctx.fillStyle='#222';ctx.fillRect(-10,10,8,10);ctx.fillRect(2,10,8,10);
+ // weapon in hand
+ ctx.fillStyle=weapons[weaponId].col;ctx.fillRect(12,-2,14,4);
+ ctx.restore();
+ // hp
+ ctx.fillStyle='#000';ctx.fillRect(px-15,py-28,30,5);ctx.fillStyle='#00ff88';ctx.fillRect(px-14,py-27,28*(hp/maxHp),3);
+}
+
+let shootCooldown=0, mouseX=W/2, mouseY=H/2;
+canvas.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY-innerHeight+H+62;});
+canvas.addEventListener('mousedown',e=>{keys['shoot']=true;});canvas.addEventListener('mouseup',e=>{keys['shoot']=false;});
+
+function spawnE(){if(enemies.length<10)enemies.push({x:Math.random()*W,y:Math.random()*H,hp:90,maxHp:90,angle:0});}setInterval(spawnE,1800);
+
+function loop(){
+ ctx.clearRect(0,0,W,H);
+ // floor grid
+ ctx.strokeStyle='#222';ctx.lineWidth=1;for(let i=0;i<W;i+=60){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,H);ctx.stroke();}for(let i=0;i<H;i+=60){ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(W,i);ctx.stroke();}
+ let nx=0,ny=0;if(keys['w'])ny=-speed;if(keys['s'])ny=speed;if(keys['a'])nx=-speed;if(keys['d'])nx=speed;x+=nx;y+=ny;x=Math.max(20,Math.min(W-20,x));y=Math.max(20,Math.min(H-20,y));
+ drawPlayer(x,y);
+
+ if(shootCooldown>0)shootCooldown--;
+ if(keys[' ']||keys['shoot']){if(shootCooldown<=0){let w=weapons[weaponId];let baseAng=Math.atan2(mouseY-y,mouseX-x);
+  for(let b=0;b<w.bullets;b++){let ang=baseAng+(Math.random()-0.5)*w.spread;
+   bullets.push({x:x+12,y:y,dx:Math.cos(ang)*10,dy:Math.sin(ang)*10,dmg:w.dmg,life:80,explosive:!!w.explosive,col:w.col});}
+  shootCooldown=w.cooldown;
+ }}
+
+ bullets.forEach((b,i)=>{
+  b.x+=b.dx;b.y+=b.dy;b.life--;
+  ctx.fillStyle=b.col;ctx.shadowColor=b.col;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(b.x,b.y,b.explosive?6:3,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  if(b.life<=0){if(b.explosive){for(let k=0;k<12;k++)particles.push({x:b.x,y:b.y,vx:(Math.random()-0.5)*8,vy:(Math.random()-0.5)*8,life:20,col:'#ff6600'});} bullets.splice(i,1);return;}
+  enemies.forEach((e,j)=>{
+   if(Math.hypot(b.x-e.x,b.y-e.y)<22){
+    e.hp-=b.dmg;if(b.explosive){for(let k=0;k<12;k++)particles.push({x:e.x,y:e.y,vx:(Math.random()-0.5)*8,vy:(Math.random()-0.5)*8,life:20,col:'#ff6600'});
+    // damage nearby
+    enemies.forEach(e2=>{if(Math.hypot(e.x-e2.x,e.y-e2.y)<60&&e2!==e)e2.hp-=30;});
+    }
+    if(!b.explosive)particles.push({x:e.x,y:e.y,vx:(Math.random()-0.5)*3,vy:(Math.random()-0.5)*3,life:10,col:'#fff'});
+    bullets.splice(i,1);
+    if(e.hp<=0){enemies.splice(j,1);money+=15*coinMult;xp+=15;if(xp>=100){lvl++;xp=0;showMsg('LEVEL UP LVL '+lvl);}updateHUD();for(let k=0;k<15;k++)particles.push({x:e.x,y:e.y,vx:(Math.random()-0.5)*6,vy:(Math.random()-0.5)*6,life:20,col:'#888'});}
+   }
+  });
+ });
+
+ enemies.forEach(e=>{
+  let ang=Math.atan2(y-e.y,x-e.x);e.angle=ang+Math.PI/2;
+  e.x+=Math.cos(ang)*1.1;e.y+=Math.sin(ang)*1.1;
+  drawRealisticRobot(e.x,e.y,e.angle,e.hp/e.maxHp);
+  if(Math.hypot(x-e.x,y-e.y)<26){hp-=0.4;if(hp<=0){hp=maxHp;money=Math.max(0,money-50);showMsg('DEAD - RESPAWN');x=W/2;y=H/2;}}
+ });
+
+ particles.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;p.life--;p.vy+=0.1;ctx.fillStyle=p.col;ctx.fillRect(p.x,p.y,4,4);if(p.life<=0)particles.splice(i,1);});
+
+ ctx.fillStyle='#aaa';ctx.font='11px Arial';ctx.fillText('WASD MOVE | SPACE / MAUS KLICK SCHIESSEN | Q CHAR WECHSELN | WEAPONS BUTTON FUR NEUE WAFFEN',10,18);
+ requestAnimationFrame(loop);
+}loop();updateHUD();showMsg('NEW UPDATE: REAL ROBOTS + WEAPONS!');
 </script></body></html>
