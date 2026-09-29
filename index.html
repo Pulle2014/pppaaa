@@ -1,138 +1,154 @@
 <!DOCTYPE html>
-<html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ULTIMATE FAMILY BATTLE - ROBOT UPDATE</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0d0d0d;color:#fff;font-family:Arial;overflow:hidden}#hud{position:fixed;top:0;left:0;right:0;height:62px;background:#1c1c1c;border-bottom:3px solid #00e5ff;display:flex;align-items:center;gap:6px;padding:0 10px;z-index:100;flex-wrap:wrap}#hud button{background:#2a2a2a;color:#fff;border:2px solid #00e5ff;padding:7px 10px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:11px}#hud button.active{border-color:#ffcc00;color:#ffcc00}#stats{margin-left:auto;display:flex;gap:10px;font-size:12px;font-weight:bold}#stats span{color:#00e5ff}#gameCanvas{display:block;margin-top:62px;width:100vw;height:calc(100vh - 62px);background:radial-gradient(#1a1a2e,#111)}.panel{position:fixed;top:70px;left:50%;transform:translateX(-50%);width:92%;max-width:700px;max-height:80vh;background:#1e1e1e;border:3px solid #00e5ff;border-radius:12px;padding:18px;overflow:auto;display:none;z-index:200}.item{background:#2a2a2a;border:1px solid #444;padding:10px;border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}.item button{background:#00e5ff;color:#000;border:none;padding:6px 10px;border-radius:6px;font-weight:bold;cursor:pointer}.item button:disabled{background:#555;color:#888}#msg{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#00e5ff;color:#000;padding:10px 18px;border-radius:20px;font-weight:bold;display:none;z-index:300}</style></head><body>
-<div id="hud"><button onclick="openPanel('weapons')">WEAPONS</button><button onclick="openPanel('shop')">SHOP</button><button onclick="openPanel('skins')">SKINS</button><button onclick="switchChar()">SWITCH [Q]</button><button onclick="openPanel('family')">FAMILY</button><div id="stats"><div>WPN: <span id="wpnName">PISTOL</span></div><div>MONEY: <span id="money">600</span></div><div>LVL: <span id="lvl">1</span></div><div>CHAR: <span id="charName">DAD</span></div></div></div>
-<canvas id="gameCanvas"></canvas>
+<html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>FAMILY BATTLE 3D - REAL ROBOTS</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#000;color:#fff;font-family:Arial;overflow:hidden}#hud{position:fixed;top:0;left:0;right:0;height:58px;background:#111;border-bottom:3px solid #00e5ff;display:flex;align-items:center;gap:6px;padding:0 10px;z-index:100}#hud button{background:#222;color:#fff;border:2px solid #00e5ff;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:11px}#stats{margin-left:auto;display:flex;gap:12px;font-size:11px;font-weight:bold}#stats span{color:#00e5ff}.panel{position:fixed;top:68px;left:50%;transform:translateX(-50%);width:92%;max-width:650px;background:#1e1e1e;border:3px solid #00e5ff;border-radius:12px;padding:16px;display:none;z-index:200;max-height:80vh;overflow:auto}.item{background:#2a2a2a;border:1px solid #444;padding:10px;border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}.item button{background:#00e5ff;color:#000;border:none;padding:6px 10px;border-radius:6px;font-weight:bold;cursor:pointer}#cross{position:fixed;top:50%;left:50%;width:20px;height:20px;transform:translate(-50%,-50%);z-index:50;pointer-events:none}#cross::before,#cross::after{content:'';position:absolute;background:#fff}#cross::before{width:2px;height:20px;left:9px;top:0}#cross::after{width:20px;height:2px;left:0;top:9px}#msg{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#00e5ff;color:#000;padding:8px 16px;border-radius:20px;font-weight:bold;display:none;z-index:300}#info{position:fixed;bottom:10px;left:10px;color:#888;font-size:11px;z-index:60}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+</head><body>
+<div id="hud"><button onclick="openPanel('weapons')">WEAPONS</button><button onclick="openPanel('shop')">SHOP</button><button onclick="switchChar()">SWITCH [Q]</button><button onclick="openPanel('family')">FAMILY</button><div id="stats"><div>WPN: <span id="wpnName">PISTOL</span></div><div>MONEY: <span id="money">800</span></div><div>LVL: <span id="lvl">1</span></div><div>CHAR: <span id="charName">DAD</span></div><div>HP: <span id="hpText">200</span></div></div></div>
+<div id="cross"></div><div id="info">WASD LAUFEN | MAUS ZIELEN | KLICK SCHIESSEN | Q WECHSELN | R NEU LADEN</div><div id="msg"></div>
 
-<div id="weapons" class="panel"><h2>WEAPONS SHOP - NEW!</h2>
-<div class="item"><span><b>PISTOL</b> - 15 DMG | Fast - FREE</span><button onclick="setWeapon(0)">SELECT</button></div>
-<div class="item"><span><b>SHOTGUN</b> - 40 DMG | 3 Bullets - 400</span><button onclick="buyWeapon(1)">BUY</button></div>
-<div class="item"><span><b>LASER RIFLE</b> - 25 DMG | Super Fast | Laser - 800</span><button onclick="buyWeapon(2)">BUY</button></div>
-<div class="item"><span><b>ROCKET LAUNCHER</b> - 100 DMG | Explosion - 1200</span><button onclick="buyWeapon(3)">BUY</button></div>
+<div id="weapons" class="panel"><h2>3D WEAPONS</h2>
+<div class="item"><span><b>PISTOL</b> - 15 DMG - FREE</span><button onclick="setWeapon(0)">USE</button></div>
+<div class="item"><span><b>SHOTGUN</b> - 3x18 DMG - 400</span><button onclick="buyWeapon(1)">BUY</button></div>
+<div class="item"><span><b>LASER RIFLE</b> - 25 DMG Rapid - 800</span><button onclick="buyWeapon(2)">BUY</button></div>
+<div class="item"><span><b>ROCKET LAUNCHER</b> - 120 DMG Explosion - 1200</span><button onclick="buyWeapon(3)">BUY</button></div>
 <button onclick="closePanels()">CLOSE</button></div>
 
-<div id="shop" class="panel"><h2>UPGRADES</h2><div class="item"><span>SPEED +1 (200)</span><button onclick="buy('speed')">BUY</button></div><div class="item"><span>HEALTH +20 (250)</span><button onclick="buy('hp')">BUY</button></div><div class="item"><span>COIN BOOST x2 (1000)</span><button onclick="buy('coin')">BUY</button></div><button onclick="closePanels()">CLOSE</button></div>
-<div id="skins" class="panel"><h2>SKINS</h2><div class="item"><span>CYAN - FREE</span><button onclick="setSkin('cyan')">USE</button></div><div class="item"><span>RED - 100</span><button onclick="buySkin('red',100)">BUY</button></div><div class="item"><span>GOLD - 500</span><button onclick="buySkin('gold',500)">BUY</button></div><button onclick="closePanels()">CLOSE</button></div>
-<div id="family" class="panel"><h2>FAMILY TEAM</h2><div class="item"><span>DAD - Tank [HP 200]</span><button onclick="setChar(0)">SELECT</button></div><div class="item"><span>MOM - Healer [HP 120]</span><button onclick="setChar(1)">SELECT</button></div><div class="item"><span>KID 1 - Speed [HP 80]</span><button onclick="setChar(2)">SELECT</button></div><div class="item"><span>KID 2 - Damage [HP 100]</span><button onclick="setChar(3)">SELECT</button></div><button onclick="closePanels()">CLOSE</button></div>
-<div id="msg"></div>
+<div id="shop" class="panel"><h2>UPGRADES</h2><div class="item"><span>SPEED +0.5 (200)</span><button onclick="buy('speed')">BUY</button></div><div class="item"><span>HEALTH +30 (250)</span><button onclick="buy('hp')">BUY</button></div><button onclick="closePanels()">CLOSE</button></div>
+<div id="family" class="panel"><h2>FAMILY TEAM</h2><div class="item"><span>DAD - Tank 200 HP</span><button onclick="setChar(0)">SELECT</button></div><div class="item"><span>MOM - Fast Healer 120 HP</span><button onclick="setChar(1)">SELECT</button></div><div class="item"><span>KID1 - Speed 80 HP</span><button onclick="setChar(2)">SELECT</button></div><div class="item"><span>KID2 - Damage 100 HP</span><button onclick="setChar(3)">SELECT</button></div><button onclick="closePanels()">CLOSE</button></div>
 
-<script>
-const canvas=document.getElementById('gameCanvas');const ctx=canvas.getContext('2d');let W,H;function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight-62;}resize();onresize=resize;
-let money=600,lvl=1,xp=0,speed=4,hp=200,maxHp=200,coinMult=1,color='cyan',charId=0;let x=W/2,y=H/2,keys={},enemies=[],bullets=[],particles=[],weaponId=0;
+<script type="module">
+import * as THREE from 'three';
 
-const weapons=[
- {name:'PISTOL',dmg:15,cooldown:12,spread:0.08,bullets:1,price:0,col:'#ffcc00'},
- {name:'SHOTGUN',dmg:18,cooldown:30,spread:0.35,bullets:3,price:400,col:'#ff8800'},
- {name:'LASER RIFLE',dmg:25,cooldown:6,spread:0.02,bullets:1,price:800,col:'#00ffff'},
- {name:'ROCKET LAUNCHER',dmg:100,cooldown:60,spread:0.05,bullets:1,price:1200,col:'#ff0000',explosive:true}
-];
+let money=800,lvl=1,xp=0,speed=0.18,hp=200,maxHp=200,weaponId=0,charId=0,keys={},mouseX=0,mouseY=0,canShoot=true;
+const weapons=[{name:'PISTOL',dmg:15,cd:300,bullets:1,speed:1.2,col:0xffcc00,price:0},{name:'SHOTGUN',dmg:18,cd:600,bullets:5,speed:1,col:0xff8800,price:400},{name:'LASER RIFLE',dmg:25,cd:120,bullets:1,speed:1.8,col:0x00ffff,price:800},{name:'ROCKET LAUNCHER',dmg:120,cd:1000,bullets:1,speed:0.8,col:0xff0000,price:1200,explosive:true}];
 const weaponsOwned=[0];
+const chars=[{name:'DAD',col:0x00e5ff,hp:200},{name:'MOM',col:0xff88cc,hp:120},{name:'KID1',col:0x00ff88,hp:80},{name:'KID2',col:0xffcc00,hp:100}];
 
-const chars=[{name:'DAD',color:'cyan',hp:200},{name:'MOM',color:'#ff88cc',hp:120},{name:'KID1',color:'#00ff88',hp:80},{name:'KID2',color:'#ffcc00',hp:100}];
-const skinsOwned=['cyan'];
-function showMsg(t){const m=document.getElementById('msg');m.textContent=t;m.style.display='block';setTimeout(()=>m.style.display='none',2000);}
-function updateHUD(){document.getElementById('money').textContent=money;document.getElementById('lvl').textContent=lvl;document.getElementById('charName').textContent=chars[charId].name;document.getElementById('wpnName').textContent=weapons[weaponId].name;}
-function openPanel(id){closePanels();document.getElementById(id).style.display='block';}function closePanels(){document.querySelectorAll('.panel').forEach(p=>p.style.display='none');}
-function buy(t){if(t==='speed'&&money>=200){money-=200;speed++;showMsg('SPEED UP');}else if(t==='hp'&&money>=250){money-=250;maxHp+=20;hp=maxHp;showMsg('HEALTH UP');}else if(t==='coin'&&money>=1000){money-=1000;coinMult=2;showMsg('COIN x2');}else{showMsg('NO MONEY');}updateHUD();}
-function setSkin(c){if(skinsOwned.includes(c)){color=c;chars[charId].color=c;showMsg('SKIN '+c);closePanels();}}
-function buySkin(c,p){if(money>=p){money-=p;skinsOwned.push(c);showMsg('BOUGHT '+c);}else{showMsg('NO MONEY');}updateHUD();}
-function setChar(i){charId=i;color=chars[i].color;maxHp=chars[i].hp;hp=maxHp;updateHUD();showMsg('CHAR '+chars[i].name);closePanels();}
-function switchChar(){charId=(charId+1)%4;setChar(charId);}
-function setWeapon(id){if(weaponsOwned.includes(id)){weaponId=id;updateHUD();showMsg(weapons[id].name+' EQUIPPED');closePanels();}}
-function buyWeapon(id){if(weaponsOwned.includes(id)){setWeapon(id);return;}if(money>=weapons[id].price){money-=weapons[id].price;weaponsOwned.push(id);weaponId=id;updateHUD();showMsg('BOUGHT '+weapons[id].name);}else{showMsg('NO MONEY');}}
+const scene=new THREE.Scene();scene.fog=new THREE.Fog(0x0a0a1a,20,70);
+const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;document.body.appendChild(renderer.domElement);
 
-addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key.toLowerCase()==='q')switchChar();if(e.key==='Escape')closePanels();});
-addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;});
+scene.add(new THREE.AmbientLight(0x404040,1.2));
+const dirLight=new THREE.DirectionalLight(0xffffff,1);dirLight.position.set(10,20,10);dirLight.castShadow=true;scene.add(dirLight);
+const pointLight=new THREE.PointLight(0x00e5ff,2,30);pointLight.position.set(0,5,0);scene.add(pointLight);
 
-function drawRealisticRobot(ex,ey,angle,hpPercent){
- ctx.save();ctx.translate(ex,ey);ctx.rotate(angle);
- // shadow
- ctx.fillStyle='rgba(0,0,0,0.4)';ctx.beginPath();ctx.ellipse(0,18,14,4,0,0,Math.PI*2);ctx.fill();
- // legs
- ctx.fillStyle='#555';ctx.fillRect(-8,8,5,12);ctx.fillRect(3,8,5,12);
- ctx.fillStyle='#222';ctx.fillRect(-9,19,7,3);ctx.fillRect(2,19,7,3);
- // body - metallic gradient
- let grad=ctx.createLinearGradient(-12,-8,12,10);grad.addColorStop(0,'#8a8a8a');grad.addColorStop(0.5,'#e0e0e0');grad.addColorStop(1,'#4a4a4a');
- ctx.fillStyle=grad;ctx.fillRect(-12,-8,24,18);
- ctx.strokeStyle='#00e5ff';ctx.lineWidth=1;ctx.strokeRect(-12,-8,24,18);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0x1a1a2e,metalness:0.3,roughness:0.8}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+const grid=new THREE.GridHelper(200,40,0x00e5ff,0x222244);scene.add(grid);
+
+function createRealisticRobot(x,z){
+ const group=new THREE.Group();
+ // body
+ const body=new THREE.Mesh(new THREE.BoxGeometry(1.2,1.4,0.8),new THREE.MeshStandardMaterial({color:0x888888,metalness:0.8,roughness:0.2}));body.position.y=1.4;body.castShadow=true;group.add(body);
  // chest light
- ctx.fillStyle='#00e5ff';ctx.fillRect(-3,-2,6,4);
- // arms
- ctx.fillStyle='#666';ctx.fillRect(-18,-2,6,10);ctx.fillRect(12,-2,6,10);
- ctx.fillStyle='#333';ctx.beginPath();ctx.arc(-15,10,4,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(15,10,4,0,Math.PI*2);ctx.fill();
+ const chest=new THREE.Mesh(new THREE.BoxGeometry(0.4,0.3,0.1),new THREE.MeshStandardMaterial({color:0x00e5ff,emissive:0x00e5ff,emissiveIntensity:2}));chest.position.set(0,1.5,0.45);group.add(chest);
  // head
- let headGrad=ctx.createLinearGradient(-8,-20,8,-8);headGrad.addColorStop(0,'#777');headGrad.addColorStop(1,'#ddd');
- ctx.fillStyle=headGrad;ctx.fillRect(-9,-20,18,12);
+ const head=new THREE.Mesh(new THREE.BoxGeometry(0.8,0.7,0.7),new THREE.MeshStandardMaterial({color:0xaaaaaa,metalness:0.7,roughness:0.3}));head.position.y=2.5;head.castShadow=true;group.add(head);
  // eyes - glowing red
- ctx.fillStyle='#ff0000';ctx.shadowColor='#ff0000';ctx.shadowBlur=6;
- ctx.beginPath();ctx.arc(-4,-14,2.5,0,Math.PI*2);ctx.fill();
- ctx.beginPath();ctx.arc(4,-14,2.5,0,Math.PI*2);ctx.fill();
- ctx.shadowBlur=0;
+ const eye1=new THREE.Mesh(new THREE.SphereGeometry(0.12,8,8),new THREE.MeshStandardMaterial({color:0xff0000,emissive:0xff0000,emissiveIntensity:3}));eye1.position.set(-0.2,2.5,0.4);group.add(eye1);
+ const eye2=eye1.clone();eye2.position.set(0.2,2.5,0.4);group.add(eye2);
  // antenna
- ctx.fillStyle='#444';ctx.fillRect(-1,-24,2,4);ctx.fillStyle='#ff0000';ctx.beginPath();ctx.arc(0,-25,2,0,Math.PI*2);ctx.fill();
- // hp bar
- ctx.fillStyle='#000';ctx.fillRect(-14,-28,28,4);ctx.fillStyle=hpPercent>0.5?'#0f0':hpPercent>0.2?'#ff0':'#f00';ctx.fillRect(-13,-27,26*hpPercent,2);
- ctx.restore();
+ const ant=new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.4),new THREE.MeshStandardMaterial({color:0x333333}));ant.position.set(0,3,0);group.add(ant);
+ const antTop=new THREE.Mesh(new THREE.SphereGeometry(0.08),new THREE.MeshStandardMaterial({color:0xff0000,emissive:0xff0000,emissiveIntensity:2}));antTop.position.set(0,3.25,0);group.add(antTop);
+ // arms
+ const armL=new THREE.Mesh(new THREE.BoxGeometry(0.3,0.9,0.3),new THREE.MeshStandardMaterial({color:0x666666,metalness:0.6}));armL.position.set(-0.85,1.4,0);armL.castShadow=true;group.add(armL);
+ const armR=armL.clone();armR.position.set(0.85,1.4,0);group.add(armR);
+ // hands
+ const handL=new THREE.Mesh(new THREE.SphereGeometry(0.2),new THREE.MeshStandardMaterial({color:0x333333}));handL.position.set(-0.85,0.8,0);group.add(handL);
+ const handR=handL.clone();handR.position.set(0.85,0.8,0);group.add(handR);
+ // legs
+ const legL=new THREE.Mesh(new THREE.BoxGeometry(0.35,0.9,0.35),new THREE.MeshStandardMaterial({color:0x555555,metalness:0.5}));legL.position.set(-0.3,0.45,0);legL.castShadow=true;group.add(legL);
+ const legR=legL.clone();legR.position.set(0.3,0.45,0);group.add(legR);
+ group.position.set(x,0,z);group.userData={hp:100,maxHp:100,alive:true};
+ scene.add(group);return group;
 }
 
-function drawPlayer(px,py){
- ctx.save();ctx.translate(px,py);
- ctx.fillStyle='rgba(0,0,0,0.3)';ctx.beginPath();ctx.ellipse(0,18,12,4,0,0,Math.PI*2);ctx.fill();
- ctx.fillStyle=color;ctx.fillRect(-12,-10,24,20);ctx.fillStyle='#fff';ctx.fillRect(-10,-8,6,4);
- ctx.fillStyle='#222';ctx.fillRect(-10,10,8,10);ctx.fillRect(2,10,8,10);
- // weapon in hand
- ctx.fillStyle=weapons[weaponId].col;ctx.fillRect(12,-2,14,4);
- ctx.restore();
- // hp
- ctx.fillStyle='#000';ctx.fillRect(px-15,py-28,30,5);ctx.fillStyle='#00ff88';ctx.fillRect(px-14,py-27,28*(hp/maxHp),3);
+function createPlayerMesh(){
+ const g=new THREE.Group();
+ const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.4,0.8,4,8),new THREE.MeshStandardMaterial({color:chars[charId].col}));body.position.y=1;body.castShadow=true;g.add(body);
+ const head=new THREE.Mesh(new THREE.SphereGeometry(0.35),new THREE.MeshStandardMaterial({color:0xffdbac}));head.position.y=1.9;g.add(head);
+ // weapon
+ const weap=new THREE.Mesh(new THREE.BoxGeometry(0.15,0.15,0.9),new THREE.MeshStandardMaterial({color:weapons[weaponId].col,emissive:weapons[weaponId].col,emissiveIntensity:0.5}));weap.position.set(0.4,1,0.5);weap.name='weapon';g.add(weap);
+ g.position.set(0,0,0);scene.add(g);return g;
 }
 
-let shootCooldown=0, mouseX=W/2, mouseY=H/2;
-canvas.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY-innerHeight+H+62;});
-canvas.addEventListener('mousedown',e=>{keys['shoot']=true;});canvas.addEventListener('mouseup',e=>{keys['shoot']=false;});
+let player=createPlayerMesh();
+let enemies=[];for(let i=0;i<6;i++)enemies.push(createRealisticRobot((Math.random()-0.5)*40,(Math.random()-0.5)*40));
 
-function spawnE(){if(enemies.length<10)enemies.push({x:Math.random()*W,y:Math.random()*H,hp:90,maxHp:90,angle:0});}setInterval(spawnE,1800);
+let bullets=[];
+let particles=[];
+
+function showMsg(t){const m=document.getElementById('msg');m.textContent=t;m.style.display='block';setTimeout(()=>m.style.display='none',2500);}
+function updateHUD(){document.getElementById('money').textContent=money;document.getElementById('lvl').textContent=lvl;document.getElementById('charName').textContent=chars[charId].name;document.getElementById('wpnName').textContent=weapons[weaponId].name;document.getElementById('hpText').textContent=Math.floor(hp);}
+window.openPanel=(id)=>{closePanels();document.getElementById(id).style.display='block';};window.closePanels=()=>{document.querySelectorAll('.panel').forEach(p=>p.style.display='none');};
+window.buy=(t)=>{if(t==='speed'&&money>=200){money-=200;speed+=0.04;showMsg('SPEED UP');}else if(t==='hp'&&money>=250){money-=250;maxHp+=30;hp=maxHp;showMsg('HEALTH UP');}else{showMsg('NO MONEY');}updateHUD();};
+window.setChar=(i)=>{charId=i;maxHp=chars[i].hp;hp=maxHp;scene.remove(player);player=createPlayerMesh();updateHUD();showMsg(chars[i].name);closePanels();};
+window.switchChar=()=>{setChar((charId+1)%4);};
+window.setWeapon=(id)=>{if(weaponsOwned.includes(id)){weaponId=id;let w=player.getObjectByName('weapon');if(w){w.material.color.setHex(weapons[id].col);w.material.emissive.setHex(weapons[id].col);}updateHUD();showMsg(weapons[id].name);closePanels();}};
+window.buyWeapon=(id)=>{if(weaponsOwned.includes(id)){setWeapon(id);return;}if(money>=weapons[id].price){money-=weapons[id].price;weaponsOwned.push(id);weaponId=id;let w=player.getObjectByName('weapon');if(w){w.material.color.setHex(weapons[id].col);w.material.emissive.setHex(weapons[id].col);}updateHUD();showMsg('BOUGHT '+weapons[id].name);}else{showMsg('NO MONEY');}};
+
+addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key.toLowerCase()==='q')switchChar();if(e.key==='Escape')closePanels();});addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;});
+addEventListener('mousemove',e=>{mouseX=(e.clientX/innerWidth)*2-1;mouseY=-(e.clientY/innerHeight)*2+1;});
+addEventListener('mousedown',()=>{shoot();});
+function shoot(){
+ if(!canShoot)return;canShoot=false;setTimeout(()=>canShoot=true,weapons[weaponId].cd);
+ let w=weapons[weaponId];
+ // direction from camera
+ const dir=new THREE.Vector3();camera.getWorldDirection(dir);
+ for(let i=0;i<w.bullets;i++){
+  const spread=(Math.random()-0.5)*0.1;
+  const bDir=dir.clone();bDir.x+=spread;bDir.y+=spread;
+  const b=new THREE.Mesh(new THREE.SphereGeometry(w.explosive?0.25:0.12,8,8),new THREE.MeshStandardMaterial({color:w.col,emissive:w.col,emissiveIntensity:2}));
+  b.position.copy(player.position);b.position.y=1.2;b.position.add(dir.clone().multiplyScalar(1.2));
+  b.userData={dir:bDir.clone(),speed:w.speed,dmg:w.dmg,life:100,explosive:!!w.explosive};scene.add(b);bullets.push(b);
+ }
+}
+
+function createExplosion(pos){
+ for(let i=0;i<20;i++){const p=new THREE.Mesh(new THREE.SphereGeometry(0.15),new THREE.MeshStandardMaterial({color:0xff6600,emissive:0xff3300,emissiveIntensity:2}));p.position.copy(pos);p.userData={vel:new THREE.Vector3((Math.random()-0.5)*0.6,Math.random()*0.6,(Math.random()-0.5)*0.6),life:30};scene.add(p);particles.push(p);}
+}
 
 function loop(){
- ctx.clearRect(0,0,W,H);
- // floor grid
- ctx.strokeStyle='#222';ctx.lineWidth=1;for(let i=0;i<W;i+=60){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,H);ctx.stroke();}for(let i=0;i<H;i+=60){ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(W,i);ctx.stroke();}
- let nx=0,ny=0;if(keys['w'])ny=-speed;if(keys['s'])ny=speed;if(keys['a'])nx=-speed;if(keys['d'])nx=speed;x+=nx;y+=ny;x=Math.max(20,Math.min(W-20,x));y=Math.max(20,Math.min(H-20,y));
- drawPlayer(x,y);
+ requestAnimationFrame(loop);
+ // move
+ let moveX=0,moveZ=0;if(keys['w'])moveZ=-speed;if(keys['s'])moveZ=speed;if(keys['a'])moveX=-speed;if(keys['d'])moveX=speed;
+ const camDir=new THREE.Vector3();camera.getWorldDirection(camDir);camDir.y=0;camDir.normalize();
+ const right=new THREE.Vector3();right.crossVectors(camDir,new THREE.Vector3(0,1,0));
+ player.position.add(camDir.clone().multiplyScalar(-moveZ*5));player.position.add(right.clone().multiplyScalar(-moveX*5));
+ player.position.x=Math.max(-90,Math.min(90,player.position.x));player.position.z=Math.max(-90,Math.min(90,player.position.z));
 
- if(shootCooldown>0)shootCooldown--;
- if(keys[' ']||keys['shoot']){if(shootCooldown<=0){let w=weapons[weaponId];let baseAng=Math.atan2(mouseY-y,mouseX-x);
-  for(let b=0;b<w.bullets;b++){let ang=baseAng+(Math.random()-0.5)*w.spread;
-   bullets.push({x:x+12,y:y,dx:Math.cos(ang)*10,dy:Math.sin(ang)*10,dmg:w.dmg,life:80,explosive:!!w.explosive,col:w.col});}
-  shootCooldown=w.cooldown;
- }}
+ // camera follow behind
+ const targetCamPos=player.position.clone().add(new THREE.Vector3(0,6,10));camera.position.lerp(targetCamPos,0.08);camera.lookAt(player.position.clone().add(new THREE.Vector3(0,1,0)));
 
- bullets.forEach((b,i)=>{
-  b.x+=b.dx;b.y+=b.dy;b.life--;
-  ctx.fillStyle=b.col;ctx.shadowColor=b.col;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(b.x,b.y,b.explosive?6:3,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-  if(b.life<=0){if(b.explosive){for(let k=0;k<12;k++)particles.push({x:b.x,y:b.y,vx:(Math.random()-0.5)*8,vy:(Math.random()-0.5)*8,life:20,col:'#ff6600'});} bullets.splice(i,1);return;}
+ // enemies chase
+ enemies.forEach((e,i)=>{
+  if(!e.userData.alive)return;
+  const dir=new THREE.Vector3().subVectors(player.position,e.position);dir.y=0;const dist=dir.length();dir.normalize();
+  if(dist>1.5){e.position.add(dir.multiplyScalar(0.04));e.lookAt(player.position);}
+  if(dist<2){hp-=0.3;updateHUD();if(hp<=0){hp=maxHp;player.position.set(0,0,0);money=Math.max(0,money-50);showMsg('DEAD - RESPAWN');}}
+ });
+
+ // bullets
+ bullets.forEach((b,idx)=>{
+  b.position.add(b.userData.dir.clone().multiplyScalar(b.userData.speed));
+  b.userData.life--;if(b.userData.life<=0){scene.remove(b);bullets.splice(idx,1);return;}
   enemies.forEach((e,j)=>{
-   if(Math.hypot(b.x-e.x,b.y-e.y)<22){
-    e.hp-=b.dmg;if(b.explosive){for(let k=0;k<12;k++)particles.push({x:e.x,y:e.y,vx:(Math.random()-0.5)*8,vy:(Math.random()-0.5)*8,life:20,col:'#ff6600'});
-    // damage nearby
-    enemies.forEach(e2=>{if(Math.hypot(e.x-e2.x,e.y-e2.y)<60&&e2!==e)e2.hp-=30;});
+   if(!e.userData.alive)return;
+   if(b.position.distanceTo(e.position.clone().add(new THREE.Vector3(0,1.2,0)))<1.5){
+    e.userData.hp-=b.userData.dmg;
+    // flash
+    e.traverse(c=>{if(c.isMesh){c.material.emissive=new THREE.Color(0xff0000);setTimeout(()=>c.material.emissive=new THREE.Color(0x000000),80);}});
+    if(b.userData.explosive){createExplosion(b.position);enemies.forEach(e2=>{if(e2.userData.alive&&e2.position.distanceTo(b.position)<5)e2.userData.hp-=50;});}
+    scene.remove(b);bullets.splice(idx,1);
+    if(e.userData.hp<=0){e.userData.alive=false;scene.remove(e);createExplosion(e.position);money+=20*1;xp+=15;if(xp>=100){lvl++;xp=0;showMsg('LEVEL UP LVL '+lvl);}updateHUD();
+     setTimeout(()=>{if(!e.userData.alive){e.position.set((Math.random()-0.5)*50,(0),(Math.random()-0.5)*50);e.userData.hp=e.userData.maxHp;e.userData.alive=true;scene.add(e);}},4000);
     }
-    if(!b.explosive)particles.push({x:e.x,y:e.y,vx:(Math.random()-0.5)*3,vy:(Math.random()-0.5)*3,life:10,col:'#fff'});
-    bullets.splice(i,1);
-    if(e.hp<=0){enemies.splice(j,1);money+=15*coinMult;xp+=15;if(xp>=100){lvl++;xp=0;showMsg('LEVEL UP LVL '+lvl);}updateHUD();for(let k=0;k<15;k++)particles.push({x:e.x,y:e.y,vx:(Math.random()-0.5)*6,vy:(Math.random()-0.5)*6,life:20,col:'#888'});}
    }
   });
  });
 
- enemies.forEach(e=>{
-  let ang=Math.atan2(y-e.y,x-e.x);e.angle=ang+Math.PI/2;
-  e.x+=Math.cos(ang)*1.1;e.y+=Math.sin(ang)*1.1;
-  drawRealisticRobot(e.x,e.y,e.angle,e.hp/e.maxHp);
-  if(Math.hypot(x-e.x,y-e.y)<26){hp-=0.4;if(hp<=0){hp=maxHp;money=Math.max(0,money-50);showMsg('DEAD - RESPAWN');x=W/2;y=H/2;}}
- });
+ particles.forEach((p,i)=>{p.position.add(p.userData.vel);p.userData.vel.y-=0.02;p.userData.life--;if(p.userData.life<=0){scene.remove(p);particles.splice(i,1);}});
 
- particles.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;p.life--;p.vy+=0.1;ctx.fillStyle=p.col;ctx.fillRect(p.x,p.y,4,4);if(p.life<=0)particles.splice(i,1);});
-
- ctx.fillStyle='#aaa';ctx.font='11px Arial';ctx.fillText('WASD MOVE | SPACE / MAUS KLICK SCHIESSEN | Q CHAR WECHSELN | WEAPONS BUTTON FUR NEUE WAFFEN',10,18);
- requestAnimationFrame(loop);
-}loop();updateHUD();showMsg('NEW UPDATE: REAL ROBOTS + WEAPONS!');
+ renderer.render(scene,camera);
+}loop();
+onresize=()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);};
+updateHUD();showMsg('3D LOADED - REALISTIC ROBOTS!');
 </script></body></html>
