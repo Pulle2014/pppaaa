@@ -1,154 +1,125 @@
 <!DOCTYPE html>
-<html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>FAMILY BATTLE 3D - REAL ROBOTS</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#000;color:#fff;font-family:Arial;overflow:hidden}#hud{position:fixed;top:0;left:0;right:0;height:58px;background:#111;border-bottom:3px solid #00e5ff;display:flex;align-items:center;gap:6px;padding:0 10px;z-index:100}#hud button{background:#222;color:#fff;border:2px solid #00e5ff;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:bold;font-size:11px}#stats{margin-left:auto;display:flex;gap:12px;font-size:11px;font-weight:bold}#stats span{color:#00e5ff}.panel{position:fixed;top:68px;left:50%;transform:translateX(-50%);width:92%;max-width:650px;background:#1e1e1e;border:3px solid #00e5ff;border-radius:12px;padding:16px;display:none;z-index:200;max-height:80vh;overflow:auto}.item{background:#2a2a2a;border:1px solid #444;padding:10px;border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}.item button{background:#00e5ff;color:#000;border:none;padding:6px 10px;border-radius:6px;font-weight:bold;cursor:pointer}#cross{position:fixed;top:50%;left:50%;width:20px;height:20px;transform:translate(-50%,-50%);z-index:50;pointer-events:none}#cross::before,#cross::after{content:'';position:absolute;background:#fff}#cross::before{width:2px;height:20px;left:9px;top:0}#cross::after{width:20px;height:2px;left:0;top:9px}#msg{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#00e5ff;color:#000;padding:8px 16px;border-radius:20px;font-weight:bold;display:none;z-index:300}#info{position:fixed;bottom:10px;left:10px;color:#888;font-size:11px;z-index:60}</style>
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
-</head><body>
-<div id="hud"><button onclick="openPanel('weapons')">WEAPONS</button><button onclick="openPanel('shop')">SHOP</button><button onclick="switchChar()">SWITCH [Q]</button><button onclick="openPanel('family')">FAMILY</button><div id="stats"><div>WPN: <span id="wpnName">PISTOL</span></div><div>MONEY: <span id="money">800</span></div><div>LVL: <span id="lvl">1</span></div><div>CHAR: <span id="charName">DAD</span></div><div>HP: <span id="hpText">200</span></div></div></div>
-<div id="cross"></div><div id="info">WASD LAUFEN | MAUS ZIELEN | KLICK SCHIESSEN | Q WECHSELN | R NEU LADEN</div><div id="msg"></div>
+<html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ROBOT-NITE - Fortnite mit Robotern</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0a14;color:#fff;font-family:Arial;overflow:hidden}#ui{position:fixed;inset:0;pointer-events:none;z-index:100}#hudTop{position:absolute;top:0;left:0;right:0;height:60px;background:linear-gradient(#1a1a3a,#0e0e20);border-bottom:3px solid #00e5ff;display:flex;align-items:center;padding:0 12px;gap:8px;pointer-events:auto}#hudTop button{background:#222;border:2px solid #00e5ff;color:#fff;padding:7px 12px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:11px}#hudTop button:hover{background:#00e5ff;color:#000}#center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:16px;height:16px}#center::before,#center::after{content:'';position:absolute;background:#fff}#center::before{width:2px;height:16px;left:7px;top:0;opacity:.7}#center::after{width:16px;height:2px;left:0;top:7px;opacity:.7}#bottomBar{position:absolute;bottom:0;left:0;right:0;height:88px;background:linear-gradient(transparent,#000);display:flex;align-items:flex-end;justify-content:center;gap:6px;padding:10px}#slot{width:68px;height:68px;background:#1e1e2e;border:2px solid #555;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px}#slot.active{border-color:#ffcc00;box-shadow:0 0 12px #ffcc00}#hpBar{position:absolute;bottom:100px;left:20px;width:220px;height:22px;background:#000;border:2px solid #00e5ff;border-radius:11px;overflow:hidden}#hpFill{height:100%;width:100%;background:linear-gradient(90deg,#0f8,#0a0);transition:width.2s}#stormInfo{position:absolute;top:70px;right:20px;background:rgba(128,0,255,.8);padding:8px 12px;border-radius:8px;font-size:12px;font-weight:bold}#map{position:absolute;top:70px;left:20px;width:130px;height:130px;background:rgba(0,0,0,.7);border:2px solid #fff;border-radius:50%;overflow:hidden}.panel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#141432;border:3px solid #00e5ff;border-radius:16px;padding:20px;width:90%;max-width:500px;display:none;pointer-events:auto;z-index:200}.panel.active{display:block}.btnBig{width:100%;padding:14px;background:#ffcc00;color:#000;border:none;border-radius:10px;font-size:20px;font-weight:bold;cursor:pointer;margin-top:10px}.mode{padding:18px;background:#1e1e3e;border:3px solid #444;border-radius:12px;margin-bottom:10px;cursor:pointer;text-align:center;font-size:18px}.mode:hover{border-color:#00e5ff}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script></head><body>
+<div id="ui">
+  <div id="hudTop"><button onclick="openLobby()">LOBBY</button><button onclick="build('wall')">WAND [1]</button><button onclick="build('floor')">BODEN [2]</button><button onclick="build('ramp')">RAMPE [3]</button><div style="margin-left:auto;display:flex;gap:10px;font-weight:bold"><div>HP <span id="hpT" style="color:#0f8">100</span></div><div>MAT <span id="matT" style="color:#ffcc00">500</span></div><div>KILLS <span id="killT">0</span></div><div>ALIVE <span id="aliveT">23</span></div></div></div>
+  <div id="center"></div><div id="hpBar"><div id="hpFill"></div></div><div id="stormInfo">STURM IN: <span id="stormTimer">60</span>s</div>
+  <div id="map"><canvas id="mini" width="130" height="130"></canvas></div>
+  <div id="bottomBar"><div class="slot active" id="s0">PISTOL</div><div class="slot" id="s1">SHOTGUN</div><div class="slot" id="s2">AR</div><div class="slot" id="s3">ROCKET</div><div class="slot" id="s4">MEDKIT</div></div>
+</div>
 
-<div id="weapons" class="panel"><h2>3D WEAPONS</h2>
-<div class="item"><span><b>PISTOL</b> - 15 DMG - FREE</span><button onclick="setWeapon(0)">USE</button></div>
-<div class="item"><span><b>SHOTGUN</b> - 3x18 DMG - 400</span><button onclick="buyWeapon(1)">BUY</button></div>
-<div class="item"><span><b>LASER RIFLE</b> - 25 DMG Rapid - 800</span><button onclick="buyWeapon(2)">BUY</button></div>
-<div class="item"><span><b>ROCKET LAUNCHER</b> - 120 DMG Explosion - 1200</span><button onclick="buyWeapon(3)">BUY</button></div>
-<button onclick="closePanels()">CLOSE</button></div>
+<div id="lobbyPanel" class="panel active"><h1 style="text-align:center;color:#00e5ff">ROBOT-NITE</h1><p style="text-align:center;color:#aaa;font-size:12px">FORTNITE mit ROBOTERN - Nach deinen Skizzen</p>
+<div style="display:flex;gap:12px;margin-top:16px"><div style="flex:1"><button class="btnBig" style="background:#222;color:#fff;border:2px solid #00e5ff" onclick="openShop()">AUSRÜSTUNG</button><button class="btnBig" style="background:#222;color:#fff;border:2px solid #00e5ff;margin-top:8px" onclick="openShop()">SHOP</button></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1e1e2e;border-radius:12px;padding:10px;border:2px solid #00e5ff"><div style="font-size:10px;color:#888">(Ausgewählter Roboter)</div><div id="lobbyBot" style="width:80px;height:100px;background:linear-gradient(#777,cyan);border-radius:10px;margin:6px;box-shadow:0 0 15px cyan"></div><div id="lobbyName" style="color:cyan;font-weight:bold">CYAN-BOT</div></div></div>
+<button class="btnBig" onclick="openPlay()">PLAY</button></div>
 
-<div id="shop" class="panel"><h2>UPGRADES</h2><div class="item"><span>SPEED +0.5 (200)</span><button onclick="buy('speed')">BUY</button></div><div class="item"><span>HEALTH +30 (250)</span><button onclick="buy('hp')">BUY</button></div><button onclick="closePanels()">CLOSE</button></div>
-<div id="family" class="panel"><h2>FAMILY TEAM</h2><div class="item"><span>DAD - Tank 200 HP</span><button onclick="setChar(0)">SELECT</button></div><div class="item"><span>MOM - Fast Healer 120 HP</span><button onclick="setChar(1)">SELECT</button></div><div class="item"><span>KID1 - Speed 80 HP</span><button onclick="setChar(2)">SELECT</button></div><div class="item"><span>KID2 - Damage 100 HP</span><button onclick="setChar(3)">SELECT</button></div><button onclick="closePanels()">CLOSE</button></div>
+<div id="playPanel" class="panel"><h2>MODUS WÄHLEN</h2><div style="display:flex;gap:12px;margin-top:12px"><div style="flex:1"><div class="mode" onclick="selectMode('kronen')">👑<br>Kronenjagd<br><small>10 Kronen sammeln</small></div><div class="mode" onclick="selectMode('showdown')">💥<br>Showdown<br><small>Letzter überlebt</small></div></div><div style="width:90px;display:flex;flex-direction:column;gap:8px"><button id="bSolo" style="padding:10px;border:3px solid #ffcc00;background:#222;color:#fff;border-radius:8px;font-weight:bold" onclick="setTeam('solo')">Solo</button><button id="bDuo" style="padding:10px;border:2px solid #00e5ff;background:#222;color:#fff;border-radius:8px" onclick="setTeam('duo')">Duo</button><button id="bTrio" style="padding:10px;border:2px solid #00e5ff;background:#222;color:#fff;border-radius:8px" onclick="setTeam('trio')">Trio</button></div></div><button class="btnBig" onclick="startBattle()">BATTLE BUS STARTEN!</button><button style="width:100%;margin-top:8px;padding:8px;background:#333;color:#fff;border:none;border-radius:8px" onclick="openLobby()">ZURÜCK</button></div>
+
+<div id="shopPanel" class="panel"><h2>SHOP</h2><div style="display:flex;gap:10px;margin-top:10px"><div style="width:90px;display:flex;flex-direction:column;gap:6px"><button style="border:2px solid #ffcc00;padding:6px;background:#222;color:#fff;border-radius:6px">Skins</button><button style="padding:6px;background:#222;color:#fff;border:1px solid #444;border-radius:6px">Waffen</button><button style="padding:6px;background:#222;color:#fff;border:1px solid #444;border-radius:6px">Tanz</button></div><div id="shopGrid" style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px"></div></div><button style="width:100%;margin-top:10px;padding:8px;background:#333;color:#fff;border:none;border-radius:8px" onclick="openLobby()">LOBBY</button></div>
+
+<div id="busPanel" class="panel"><h1 style="color:#ffcc00;text-align:center">BATTLE BUS</h1><p style="text-align:center">Drücke LEERTASTE zum Abspringen!</p><div style="width:100%;height:20px;background:#333;border-radius:10px;margin-top:12px;overflow:hidden"><div id="busProgress" style="height:100%;width:0%;background:#ffcc00"></div></div></div>
 
 <script type="module">
 import * as THREE from 'three';
-
-let money=800,lvl=1,xp=0,speed=0.18,hp=200,maxHp=200,weaponId=0,charId=0,keys={},mouseX=0,mouseY=0,canShoot=true;
-const weapons=[{name:'PISTOL',dmg:15,cd:300,bullets:1,speed:1.2,col:0xffcc00,price:0},{name:'SHOTGUN',dmg:18,cd:600,bullets:5,speed:1,col:0xff8800,price:400},{name:'LASER RIFLE',dmg:25,cd:120,bullets:1,speed:1.8,col:0x00ffff,price:800},{name:'ROCKET LAUNCHER',dmg:120,cd:1000,bullets:1,speed:0.8,col:0xff0000,price:1200,explosive:true}];
-const weaponsOwned=[0];
-const chars=[{name:'DAD',col:0x00e5ff,hp:200},{name:'MOM',col:0xff88cc,hp:120},{name:'KID1',col:0x00ff88,hp:80},{name:'KID2',col:0xffcc00,hp:100}];
-
-const scene=new THREE.Scene();scene.fog=new THREE.Fog(0x0a0a1a,20,70);
+let money=800,materials=500,hp=100,maxHp=100,team='solo',mode='kronen',kills=0,alive=23,inBus=false,busTime=0,stormRadius=100,stormCenter=new THREE.Vector3(0,0,0),canBuild=true;
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x87ceeb);scene.fog=new THREE.Fog(0x87ceeb,80,200);
 const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
 const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;document.body.appendChild(renderer.domElement);
+scene.add(new THREE.AmbientLight(0xffffff,1));
+const sun=new THREE.DirectionalLight(0xffffff,1.2);sun.position.set(50,50,25);sun.castShadow=true;scene.add(sun);
+// ground island
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0x3a9d23}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+// POIs
+for(let i=0;i<8;i++){const house=new THREE.Mesh(new THREE.BoxGeometry(6,4,6),new THREE.MeshStandardMaterial({color:0x888888}));house.position.set((Math.random()-0.5)*120,2,(Math.random()-0.5)*120);house.castShadow=true;scene.add(house);}
+// chests
+let chests=[];for(let i=0;i<10;i++){const chest=new THREE.Mesh(new THREE.BoxGeometry(1,0.8,0.8),new THREE.MeshStandardMaterial({color:0xffcc00,emissive:0xffaa00,emissiveIntensity:0.5}));chest.position.set((Math.random()-0.5)*140,0.4,(Math.random()-0.5)*140);chest.castShadow=true;scene.add(chest);chests.push(chest);}
 
-scene.add(new THREE.AmbientLight(0x404040,1.2));
-const dirLight=new THREE.DirectionalLight(0xffffff,1);dirLight.position.set(10,20,10);dirLight.castShadow=true;scene.add(dirLight);
-const pointLight=new THREE.PointLight(0x00e5ff,2,30);pointLight.position.set(0,5,0);scene.add(pointLight);
-
-const floor=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.MeshStandardMaterial({color:0x1a1a2e,metalness:0.3,roughness:0.8}));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
-const grid=new THREE.GridHelper(200,40,0x00e5ff,0x222244);scene.add(grid);
-
-function createRealisticRobot(x,z){
- const group=new THREE.Group();
- // body
- const body=new THREE.Mesh(new THREE.BoxGeometry(1.2,1.4,0.8),new THREE.MeshStandardMaterial({color:0x888888,metalness:0.8,roughness:0.2}));body.position.y=1.4;body.castShadow=true;group.add(body);
- // chest light
- const chest=new THREE.Mesh(new THREE.BoxGeometry(0.4,0.3,0.1),new THREE.MeshStandardMaterial({color:0x00e5ff,emissive:0x00e5ff,emissiveIntensity:2}));chest.position.set(0,1.5,0.45);group.add(chest);
- // head
- const head=new THREE.Mesh(new THREE.BoxGeometry(0.8,0.7,0.7),new THREE.MeshStandardMaterial({color:0xaaaaaa,metalness:0.7,roughness:0.3}));head.position.y=2.5;head.castShadow=true;group.add(head);
- // eyes - glowing red
- const eye1=new THREE.Mesh(new THREE.SphereGeometry(0.12,8,8),new THREE.MeshStandardMaterial({color:0xff0000,emissive:0xff0000,emissiveIntensity:3}));eye1.position.set(-0.2,2.5,0.4);group.add(eye1);
- const eye2=eye1.clone();eye2.position.set(0.2,2.5,0.4);group.add(eye2);
- // antenna
- const ant=new THREE.Mesh(new THREE.CylinderGeometry(0.02,0.02,0.4),new THREE.MeshStandardMaterial({color:0x333333}));ant.position.set(0,3,0);group.add(ant);
- const antTop=new THREE.Mesh(new THREE.SphereGeometry(0.08),new THREE.MeshStandardMaterial({color:0xff0000,emissive:0xff0000,emissiveIntensity:2}));antTop.position.set(0,3.25,0);group.add(antTop);
- // arms
- const armL=new THREE.Mesh(new THREE.BoxGeometry(0.3,0.9,0.3),new THREE.MeshStandardMaterial({color:0x666666,metalness:0.6}));armL.position.set(-0.85,1.4,0);armL.castShadow=true;group.add(armL);
- const armR=armL.clone();armR.position.set(0.85,1.4,0);group.add(armR);
- // hands
- const handL=new THREE.Mesh(new THREE.SphereGeometry(0.2),new THREE.MeshStandardMaterial({color:0x333333}));handL.position.set(-0.85,0.8,0);group.add(handL);
- const handR=handL.clone();handR.position.set(0.85,0.8,0);group.add(handR);
- // legs
- const legL=new THREE.Mesh(new THREE.BoxGeometry(0.35,0.9,0.35),new THREE.MeshStandardMaterial({color:0x555555,metalness:0.5}));legL.position.set(-0.3,0.45,0);legL.castShadow=true;group.add(legL);
- const legR=legL.clone();legR.position.set(0.3,0.45,0);group.add(legR);
- group.position.set(x,0,z);group.userData={hp:100,maxHp:100,alive:true};
- scene.add(group);return group;
-}
-
-function createPlayerMesh(){
+function createRobot(x,z,col=0x888888){
  const g=new THREE.Group();
- const body=new THREE.Mesh(new THREE.CapsuleGeometry(0.4,0.8,4,8),new THREE.MeshStandardMaterial({color:chars[charId].col}));body.position.y=1;body.castShadow=true;g.add(body);
- const head=new THREE.Mesh(new THREE.SphereGeometry(0.35),new THREE.MeshStandardMaterial({color:0xffdbac}));head.position.y=1.9;g.add(head);
- // weapon
- const weap=new THREE.Mesh(new THREE.BoxGeometry(0.15,0.15,0.9),new THREE.MeshStandardMaterial({color:weapons[weaponId].col,emissive:weapons[weaponId].col,emissiveIntensity:0.5}));weap.position.set(0.4,1,0.5);weap.name='weapon';g.add(weap);
- g.position.set(0,0,0);scene.add(g);return g;
+ const b=new THREE.Mesh(new THREE.BoxGeometry(1.1,1.3,0.7),new THREE.MeshStandardMaterial({color:col,metalness:0.8,roughness:0.2}));b.position.y=1.3;b.castShadow=true;g.add(b);
+ const h=new THREE.Mesh(new THREE.BoxGeometry(0.7,0.6,0.6),new THREE.MeshStandardMaterial({color:0xcccccc}));h.position.y=2.4;g.add(h);
+ const eye=new THREE.Mesh(new THREE.SphereGeometry(0.11,6,6),new THREE.MeshStandardMaterial({color:0xff0000,emissive:0xff0000,emissiveIntensity:3}));eye.position.set(-0.15,2.45,0.35);g.add(eye);
+ const eye2=eye.clone();eye2.position.x=0.15;g.add(eye2);
+ const arm=new THREE.Mesh(new THREE.BoxGeometry(0.25,0.8,0.25),new THREE.MeshStandardMaterial({color:0x666666}));arm.position.set(-0.75,1.3,0);g.add(arm);
+ const arm2=arm.clone();arm2.position.x=0.75;g.add(arm2);
+ g.position.set(x,0,z);g.userData={hp:100,alive:true};scene.add(g);return g;
 }
+let player=createRobot(0,0,0x00e5ff);
+let enemies=[];for(let i=0;i<8;i++)enemies.push(createRobot((Math.random()-0.5)*100,(Math.random()-0.5)*100,[0xff3333,0x00ff88,0xffcc00,0xaa88ff][i%4]));
+let builds=[];let bullets=[];let keys={};let mouseDown=false;
 
-let player=createPlayerMesh();
-let enemies=[];for(let i=0;i<6;i++)enemies.push(createRealisticRobot((Math.random()-0.5)*40,(Math.random()-0.5)*40));
+function openLobby(){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById('lobbyPanel').classList.add('active');}
+function openPlay(){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById('playPanel').classList.add('active');}
+function openShop(){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById('shopPanel').classList.add('active');renderShop();}
+window.openLobby=openLobby;window.openPlay=openPlay;window.openShop=openShop;
+window.setTeam=t=>{team=t;document.getElementById('bSolo').style.borderColor=t==='solo'?'#ffcc00':'#00e5ff';document.getElementById('bDuo').style.borderColor=t==='duo'?'#ffcc00':'#00e5ff';document.getElementById('bTrio').style.borderColor=t==='trio'?'#ffcc00':'#00e5ff';};
+window.selectMode=m=>{mode=m;};
+function renderShop(){const grid=document.getElementById('shopGrid');grid.innerHTML='';const items=[{n:'CYAN-BOT',c:'cyan',p:0},{n:'RED-BOT',c:'#f33',p:200},{n:'GOLD-BOT',c:'gold',p:500},{n:'STEEL-BOT',c:'#aaa',p:300}];items.forEach(it=>{const d=document.createElement('div');d.style.cssText='background:#1e1e2e;border:2px solid #444;border-radius:10px;padding:10px;text-align:center';d.innerHTML=`<div style="width:60px;height:60px;background:${it.c};margin:auto;border-radius:8px"></div><div style="margin-top:6px;font-weight:bold">${it.n}</div><div style="font-size:11px">${it.p}$</div><button style="margin-top:6px;background:#00e5ff;border:none;padding:4px 8px;border-radius:6px;font-weight:bold">SELECT</button>`;d.querySelector('button').onclick=()=>{document.getElementById('lobbyBot').style.background=`linear-gradient(#777,${it.c})`;document.getElementById('lobbyName').textContent=it.n;player.traverse(o=>{if(o.isMesh&&o.geometry.type==='BoxGeometry'){if(o.material.color)o.material.color.set(it.c);}});openLobby();};grid.appendChild(d);});}
 
-let bullets=[];
-let particles=[];
+window.startBattle=()=>{
+ document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+ document.getElementById('busPanel').classList.add('active');
+ inBus=true;busTime=0;player.position.set(0,40,0);player.visible=false;
+};
 
-function showMsg(t){const m=document.getElementById('msg');m.textContent=t;m.style.display='block';setTimeout(()=>m.style.display='none',2500);}
-function updateHUD(){document.getElementById('money').textContent=money;document.getElementById('lvl').textContent=lvl;document.getElementById('charName').textContent=chars[charId].name;document.getElementById('wpnName').textContent=weapons[weaponId].name;document.getElementById('hpText').textContent=Math.floor(hp);}
-window.openPanel=(id)=>{closePanels();document.getElementById(id).style.display='block';};window.closePanels=()=>{document.querySelectorAll('.panel').forEach(p=>p.style.display='none');};
-window.buy=(t)=>{if(t==='speed'&&money>=200){money-=200;speed+=0.04;showMsg('SPEED UP');}else if(t==='hp'&&money>=250){money-=250;maxHp+=30;hp=maxHp;showMsg('HEALTH UP');}else{showMsg('NO MONEY');}updateHUD();};
-window.setChar=(i)=>{charId=i;maxHp=chars[i].hp;hp=maxHp;scene.remove(player);player=createPlayerMesh();updateHUD();showMsg(chars[i].name);closePanels();};
-window.switchChar=()=>{setChar((charId+1)%4);};
-window.setWeapon=(id)=>{if(weaponsOwned.includes(id)){weaponId=id;let w=player.getObjectByName('weapon');if(w){w.material.color.setHex(weapons[id].col);w.material.emissive.setHex(weapons[id].col);}updateHUD();showMsg(weapons[id].name);closePanels();}};
-window.buyWeapon=(id)=>{if(weaponsOwned.includes(id)){setWeapon(id);return;}if(money>=weapons[id].price){money-=weapons[id].price;weaponsOwned.push(id);weaponId=id;let w=player.getObjectByName('weapon');if(w){w.material.color.setHex(weapons[id].col);w.material.emissive.setHex(weapons[id].col);}updateHUD();showMsg('BOUGHT '+weapons[id].name);}else{showMsg('NO MONEY');}};
+window.build=type=>{
+ if(materials<10)return;materials-=10;document.getElementById('matT').textContent=materials;
+ const dir=new THREE.Vector3();camera.getWorldDirection(dir);const pos=player.position.clone().add(dir.clone().multiplyScalar(4));pos.y=0;
+ let mesh;if(type==='wall'){mesh=new THREE.Mesh(new THREE.BoxGeometry(3,3,0.3),new THREE.MeshStandardMaterial({color:0x8d7a5a}));mesh.position.set(pos.x,1.5,pos.z);}else if(type==='floor'){mesh=new THREE.Mesh(new THREE.BoxGeometry(3,0.3,3),new THREE.MeshStandardMaterial({color:0x8d7a5a}));mesh.position.set(pos.x,0.5,pos.z);}else{mesh=new THREE.Mesh(new THREE.BoxGeometry(3,0.3,3),new THREE.MeshStandardMaterial({color:0x8d7a5a}));mesh.position.set(pos.x,1.5,pos.z);mesh.rotation.x=Math.PI/5;}
+ mesh.castShadow=true;mesh.receiveShadow=true;scene.add(mesh);builds.push({mesh,life:60});
+};
 
-addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key.toLowerCase()==='q')switchChar();if(e.key==='Escape')closePanels();});addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;});
-addEventListener('mousemove',e=>{mouseX=(e.clientX/innerWidth)*2-1;mouseY=-(e.clientY/innerHeight)*2+1;});
-addEventListener('mousedown',()=>{shoot();});
+addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key===' '&&inBus){inBus=false;document.getElementById('busPanel').classList.remove('active');player.visible=true;player.position.y=0;keys[' '] = false;}if(e.key==='1')build('wall');if(e.key==='2')build('floor');if(e.key==='3')build('ramp');});addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false;});
+addEventListener('mousedown',()=>{mouseDown=true;shoot();});addEventListener('mouseup',()=>mouseDown=false);
 function shoot(){
- if(!canShoot)return;canShoot=false;setTimeout(()=>canShoot=true,weapons[weaponId].cd);
- let w=weapons[weaponId];
- // direction from camera
- const dir=new THREE.Vector3();camera.getWorldDirection(dir);
- for(let i=0;i<w.bullets;i++){
-  const spread=(Math.random()-0.5)*0.1;
-  const bDir=dir.clone();bDir.x+=spread;bDir.y+=spread;
-  const b=new THREE.Mesh(new THREE.SphereGeometry(w.explosive?0.25:0.12,8,8),new THREE.MeshStandardMaterial({color:w.col,emissive:w.col,emissiveIntensity:2}));
-  b.position.copy(player.position);b.position.y=1.2;b.position.add(dir.clone().multiplyScalar(1.2));
-  b.userData={dir:bDir.clone(),speed:w.speed,dmg:w.dmg,life:100,explosive:!!w.explosive};scene.add(b);bullets.push(b);
- }
+ const b=new THREE.Mesh(new THREE.SphereGeometry(0.12),new THREE.MeshStandardMaterial({color:0xffcc00,emissive:0xffcc00,emissiveIntensity:2}));
+ const dir=new THREE.Vector3();camera.getWorldDirection(dir);b.position.copy(player.position);b.position.y=1.4;b.position.add(dir.clone().multiplyScalar(1.5));
+ b.userData={dir,life:80};scene.add(b);bullets.push(b);
 }
 
-function createExplosion(pos){
- for(let i=0;i<20;i++){const p=new THREE.Mesh(new THREE.SphereGeometry(0.15),new THREE.MeshStandardMaterial({color:0xff6600,emissive:0xff3300,emissiveIntensity:2}));p.position.copy(pos);p.userData={vel:new THREE.Vector3((Math.random()-0.5)*0.6,Math.random()*0.6,(Math.random()-0.5)*0.6),life:30};scene.add(p);particles.push(p);}
-}
+let stormTime=60;setInterval(()=>{if(!inBus){stormTime--;document.getElementById('stormTimer').textContent=stormTime;if(stormTime<=0){stormRadius-=0.3;stormTime=60;if(stormRadius<10)stormRadius=10;}}},1000);
 
 function loop(){
  requestAnimationFrame(loop);
- // move
- let moveX=0,moveZ=0;if(keys['w'])moveZ=-speed;if(keys['s'])moveZ=speed;if(keys['a'])moveX=-speed;if(keys['d'])moveX=speed;
- const camDir=new THREE.Vector3();camera.getWorldDirection(camDir);camDir.y=0;camDir.normalize();
- const right=new THREE.Vector3();right.crossVectors(camDir,new THREE.Vector3(0,1,0));
- player.position.add(camDir.clone().multiplyScalar(-moveZ*5));player.position.add(right.clone().multiplyScalar(-moveX*5));
- player.position.x=Math.max(-90,Math.min(90,player.position.x));player.position.z=Math.max(-90,Math.min(90,player.position.z));
+ if(inBus){
+  busTime+=0.02;document.getElementById('busProgress').style.width=(busTime*20)+'%';
+  camera.position.set(Math.sin(busTime)*10,40+Math.sin(busTime*2)*2,Math.cos(busTime)*10);camera.lookAt(0,0,0);
+  if(busTime>5){inBus=false;document.getElementById('busPanel').classList.remove('active');player.visible=true;player.position.set(0,0,0);}
+  renderer.render(scene,camera);return;
+ }
+ if(!player.userData.alive){renderer.render(scene,camera);return;}
+ let mx=0,mz=0;if(keys['w'])mz=-0.18;if(keys['s'])mz=0.18;if(keys['a'])mx=-0.18;if(keys['d'])mx=0.18;
+ const camDir=new THREE.Vector3();camera.getWorldDirection(camDir);camDir.y=0;camDir.normalize();const right=new THREE.Vector3().crossVectors(camDir,new THREE.Vector3(0,1,0));
+ player.position.add(camDir.multiplyScalar(-mz*4));player.position.add(right.multiplyScalar(-mx*4));
+ player.position.x=Math.max(-95,Math.min(95,player.position.x));player.position.z=Math.max(-95,Math.min(95,player.position.z));
+ // storm damage
+ if(player.position.distanceTo(stormCenter)>stormRadius){hp-=0.2;document.getElementById('hpT').textContent=Math.floor(hp);document.getElementById('hpFill').style.width=(hp)+'%';if(hp<=0){hp=0;alert('IM STURM GESTORBEN!');location.reload();}}
 
- // camera follow behind
- const targetCamPos=player.position.clone().add(new THREE.Vector3(0,6,10));camera.position.lerp(targetCamPos,0.08);camera.lookAt(player.position.clone().add(new THREE.Vector3(0,1,0)));
+ camera.position.lerp(player.position.clone().add(new THREE.Vector3(0,7,12)),0.1);camera.lookAt(player.position.clone().add(new THREE.Vector3(0,1,0)));
 
- // enemies chase
- enemies.forEach((e,i)=>{
+ enemies.forEach(e=>{
   if(!e.userData.alive)return;
-  const dir=new THREE.Vector3().subVectors(player.position,e.position);dir.y=0;const dist=dir.length();dir.normalize();
-  if(dist>1.5){e.position.add(dir.multiplyScalar(0.04));e.lookAt(player.position);}
-  if(dist<2){hp-=0.3;updateHUD();if(hp<=0){hp=maxHp;player.position.set(0,0,0);money=Math.max(0,money-50);showMsg('DEAD - RESPAWN');}}
+  const d=new THREE.Vector3().subVectors(player.position,e.position);d.y=0;if(d.length()<30){d.normalize();e.position.add(d.multiplyScalar(0.02));e.lookAt(player.position);}
+  if(player.position.distanceTo(e.position)<2){hp-=0.2;}
  });
 
- // bullets
- bullets.forEach((b,idx)=>{
-  b.position.add(b.userData.dir.clone().multiplyScalar(b.userData.speed));
-  b.userData.life--;if(b.userData.life<=0){scene.remove(b);bullets.splice(idx,1);return;}
-  enemies.forEach((e,j)=>{
-   if(!e.userData.alive)return;
-   if(b.position.distanceTo(e.position.clone().add(new THREE.Vector3(0,1.2,0)))<1.5){
-    e.userData.hp-=b.userData.dmg;
-    // flash
-    e.traverse(c=>{if(c.isMesh){c.material.emissive=new THREE.Color(0xff0000);setTimeout(()=>c.material.emissive=new THREE.Color(0x000000),80);}});
-    if(b.userData.explosive){createExplosion(b.position);enemies.forEach(e2=>{if(e2.userData.alive&&e2.position.distanceTo(b.position)<5)e2.userData.hp-=50;});}
-    scene.remove(b);bullets.splice(idx,1);
-    if(e.userData.hp<=0){e.userData.alive=false;scene.remove(e);createExplosion(e.position);money+=20*1;xp+=15;if(xp>=100){lvl++;xp=0;showMsg('LEVEL UP LVL '+lvl);}updateHUD();
-     setTimeout(()=>{if(!e.userData.alive){e.position.set((Math.random()-0.5)*50,(0),(Math.random()-0.5)*50);e.userData.hp=e.userData.maxHp;e.userData.alive=true;scene.add(e);}},4000);
-    }
-   }
-  });
+ bullets.forEach((b,i)=>{
+  b.position.add(b.userData.dir.clone().multiplyScalar(1.2));b.userData.life--;if(b.userData.life<=0){scene.remove(b);bullets.splice(i,1);return;}
+  enemies.forEach(en=>{if(en.userData.alive&&b.position.distanceTo(en.position.clone().add(new THREE.Vector3(0,1,0)))<1.5){en.userData.hp-=25;if(en.userData.hp<=0){en.userData.alive=false;scene.remove(en);kills++;alive--;document.getElementById('killT').textContent=kills;document.getElementById('aliveT').textContent=alive;materials+=50;document.getElementById('matT').textContent=materials;}scene.remove(b);bullets.splice(i,1);}});
  });
 
- particles.forEach((p,i)=>{p.position.add(p.userData.vel);p.userData.vel.y-=0.02;p.userData.life--;if(p.userData.life<=0){scene.remove(p);particles.splice(i,1);}});
+ // chests loot
+ chests.forEach((c,i)=>{if(player.position.distanceTo(c.position)<2){scene.remove(c);chests.splice(i,1);materials+=100;document.getElementById('matT').textContent=materials;hp=Math.min(100,hp+20);}});
+
+ document.getElementById('hpT').textContent=Math.floor(hp);document.getElementById('hpFill').style.width=hp+'%';
+ if(alive<=1){alert('VICTORY ROYALE! Du bist der letzte Roboter!');location.reload();}
+
+ // minimap
+ const ctx=document.getElementById('mini').getContext('2d');ctx.clearRect(0,0,130,130);ctx.fillStyle='#3a9d23';ctx.fillRect(0,0,130,130);ctx.strokeStyle='purple';ctx.lineWidth=2;ctx.beginPath();ctx.arc(65+stormCenter.x*0.5,65+stormCenter.z*0.5,stormRadius*0.5,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#00e5ff';ctx.fillRect(65+player.position.x*0.5,65+player.position.z*0.5,4,4);enemies.forEach(en=>{if(en.userData.alive){ctx.fillStyle='red';ctx.fillRect(65+en.position.x*0.5,65+en.position.z*0.5,3,3);}});
 
  renderer.render(scene,camera);
 }loop();
 onresize=()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);};
-updateHUD();showMsg('3D LOADED - REALISTIC ROBOTS!');
+setTeam('solo');
 </script></body></html>
